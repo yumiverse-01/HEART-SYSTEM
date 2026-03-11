@@ -13,7 +13,7 @@
             </h3>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('reports.attendance.export.pdf', request()->query()) }}" class="btn btn-outline-secondary shadow-sm">
+            <a href="{{ route('reports.attendance.export.pdf', request()->query()) }}" onclick="showExportAlert(event, this.href)" class="btn btn-outline-secondary shadow-sm">
                 <i class="fas fa-file-pdf me-1"></i> Print
             </a>
             <button class="btn btn-primary shadow-sm px-4" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
@@ -108,4 +108,26 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function showExportAlert(e, url) {
+        e.preventDefault(); // Stop immediate navigation
+        
+        Swal.fire({
+            title: 'Generating PDF',
+            text: 'Please wait while we prepare the attendance report...',
+            icon: 'info',
+            timer: 2000,
+            timerProgressBar: true,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 500);
+            }
+        });
+    }
+</script>
 @endsection

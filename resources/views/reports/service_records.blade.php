@@ -12,7 +12,7 @@
             </h3>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('reports.service-records.export.pdf', request()->query()) }}" class="btn btn-outline-secondary shadow-sm">
+            <a href="{{ route('reports.service-records.export.pdf', request()->query()) }}" onclick="showExportAlert(event, this.href)" class="btn btn-outline-secondary shadow-sm">
                 <i class="fas fa-file-pdf me-1"></i> Print
             </a>
             <button class="btn btn-primary shadow-sm px-4" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
@@ -120,18 +120,17 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-function confirmDownload(event, url) {
+function showExportAlert(event, url) {
     event.preventDefault(); // Stop the immediate download
     
     Swal.fire({
         title: 'Generating Report',
-        text: 'Please wait while we prepare your PDF...',
+        text: 'Please wait while we prepare the service records report...',
         icon: 'info',
         timer: 2000,
         showConfirmButton: false,
         didOpen: () => {
             Swal.showLoading();
-            // Redirect to the download URL after a short delay
             setTimeout(() => {
                 window.location.href = url;
             }, 500);

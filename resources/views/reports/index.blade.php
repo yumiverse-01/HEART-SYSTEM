@@ -58,7 +58,7 @@
                         </a>
                     </div>
                     <div class="col-6">
-                        <a href="{{ route($report['export']) }}" class="btn btn-outline-secondary btn-sm w-100" onclick="showExportAlert()">
+                        <a href="{{ route($report['export']) }}" class="btn btn-outline-secondary btn-sm w-100" onclick="showExportAlert(event, this.href)">
                             <i class="fas fa-download me-1"></i> Export CSV
                         </a>
                     </div>
@@ -70,17 +70,24 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
-    function showExportAlert(e) {
-        // We don't preventDefault here so the download actually starts, 
-        // but we trigger the alert visually.
+    function showExportAlert(e, url) {
+        e.preventDefault(); // Stop immediate navigation
+        
         Swal.fire({
-            title: 'Exporting...',
-            text: 'Preparing your CSV download',
-            icon: 'success',
+            title: 'Generating CSV',
+            text: 'Please wait while we prepare the csv report...',
+            icon: 'info',
             timer: 2000,
-            showConfirmButton: false
+            timerProgressBar: true,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+                // Start download after a brief delay for UI feedback
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 500);
+            }
         });
     }
 </script>
