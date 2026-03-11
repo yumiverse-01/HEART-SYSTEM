@@ -38,7 +38,7 @@ return new class extends Migration
                 $table->string('guardian_name')->nullable()->after('contact_number');
             }
             if (! Schema::hasColumn('beneficiaries', 'date_registered')) {
-                $table->dateTime('date_registered')->nullable()->after('guardian_name');
+                $table->date('date_registered')->nullable()->after('guardian_name');
             }
         });
     }

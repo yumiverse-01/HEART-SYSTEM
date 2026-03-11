@@ -38,10 +38,12 @@
                                 data-status="{{ $event->status }}">
                             <i class="fas fa-edit"></i> Edit
                         </button>
-                        <form action="{{ route('events.destroy',$event->event_id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this event?')">
+                        
+                        {{-- Added class "delete-event-form" and removed onsubmit --}}
+                        <form action="{{ route('events.destroy',$event->event_id) }}" method="POST" class="d-inline delete-event-form">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-sm btn-outline-danger">
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-delete-event">
                                 <i class="fas fa-trash"></i> Delete
                             </button>
                         </form>
@@ -56,7 +58,6 @@
     @endforelse
 </div>
 
-<!-- event modal -->
 <div class="modal fade" id="eventModal" tabindex="-1" aria-labelledby="eventModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -107,6 +108,8 @@
 </div>
 
 @push('scripts')
+{{-- Include SWAL library --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const eventModalEl = document.getElementById('eventModal');
     const eventModal = new bootstrap.Modal(eventModalEl);
@@ -128,7 +131,6 @@
             form.action = '/events/' + data.event_id;
             methodInput.value = 'PUT';
             submitBtn.textContent = 'Update Event';
-            // populate fields
             document.getElementById('event_name').value = data.event_name || '';
             document.getElementById('event_type').value = data.event_type || '';
             document.getElementById('event_date').value = data.event_date || '';
@@ -145,8 +147,29 @@
 
     document.querySelectorAll('.btn-edit-event').forEach(btn => {
         btn.addEventListener('click', () => {
-            const data = btn.dataset;
-            openEventModal('edit', data);
+            openEventModal('edit', btn.dataset);
+        });
+    });
+
+    // SweetAlert2 Delete Confirmation
+    document.querySelectorAll('.btn-delete-event').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const form = this.closest('.delete-event-form');
+            
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This event will be permanently deleted!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
         });
     });
 </script>

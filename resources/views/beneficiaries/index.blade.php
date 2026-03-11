@@ -41,10 +41,11 @@
                                 data-date_registered="{{ $b->date_registered }}">
                             <i class="fas fa-edit"></i> Edit
                         </button>
-                        <form action="{{ route('beneficiaries.destroy',$b->beneficiary_id) }}" method="POST" class="d-inline" onsubmit="return confirm('Delete this beneficiary?')">
+                        
+                        <form action="{{ route('beneficiaries.destroy',$b->beneficiary_id) }}" method="POST" class="d-inline delete-beneficiary-form">
                             @csrf
                             @method('DELETE')
-                            <button class="btn btn-sm btn-outline-danger">
+                            <button type="button" class="btn btn-sm btn-outline-danger btn-delete-beneficiary">
                                 <i class="fas fa-trash"></i> Delete
                             </button>
                         </form>
@@ -63,7 +64,6 @@
     {{ $beneficiaries->links() }}
 </div>
 
-<!-- beneficiary modal -->
 <div class="modal fade" id="beneficiaryModal" tabindex="-1" aria-labelledby="beneficiaryModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -161,10 +161,12 @@
 </div>
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const beneficiaryModalEl = document.getElementById('beneficiaryModal');
     const beneficiaryModal = new bootstrap.Modal(beneficiaryModalEl);
 
+    // Unified Modal Function
     function openBeneficiaryModal(mode, data = {}) {
         const form = document.getElementById('beneficiaryForm');
         const methodInput = document.getElementById('beneficiaryFormMethod');
@@ -182,27 +184,46 @@
             form.action = '/beneficiaries/' + data.beneficiary_id;
             methodInput.value = 'PUT';
             submitBtn.textContent = 'Update';
-            // fill fields with data
+            
             Object.keys(data).forEach(key => {
-                if (document.getElementById(key)) {
-                    document.getElementById(key).value = data[key];
-                }
+                const field = document.getElementById(key);
+                if (field) { field.value = data[key]; }
             });
         }
         beneficiaryModal.show();
     }
 
+    // Event Listeners
     document.getElementById('btnOpenCreateBeneficiary').addEventListener('click', () => {
         openBeneficiaryModal('create');
     });
 
     document.querySelectorAll('.btn-edit-beneficiary').forEach(btn => {
         btn.addEventListener('click', () => {
-            const data = btn.dataset;
-            openBeneficiaryModal('edit', data);
+            openBeneficiaryModal('edit', btn.dataset);
+        });
+    });
+
+    // SweetAlert2 Delete Confirmation
+    document.querySelectorAll('.btn-delete-beneficiary').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const deleteForm = this.closest('.delete-beneficiary-form');
+            
+            Swal.fire({
+                title: 'Delete Beneficiary?',
+                text: "This action cannot be undone!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteForm.submit();
+                }
+            });
         });
     });
 </script>
 @endpush
-
 @endsection
