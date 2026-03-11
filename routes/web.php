@@ -19,6 +19,32 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout']);
 
 Route::middleware(['web'])->group(function(){
+    Route::prefix('admin')->name('dashboard.')->group(function () {
+         Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
+         Route::resource('/staff-activities', DashboardController::class);
+         Route::resource('/user-management', DashboardController::class);
+
+         Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/',                 [ReportController::class, 'index'])->name('admin.reports.index');  
+            Route::get('/beneficiaries',    [ReportController::class, 'beneficiaries'])->name('admin.reports.beneficiaries');
+            Route::get('/events',           [ReportController::class, 'events'])->name('admin.reports.events');
+            Route::get('/attendance',       [ReportController::class, 'attendance'])->name('admin.reports.attendance');
+            Route::get('/service-records',  [ReportController::class, 'serviceRecords'])->name('admin.reports.service-records');
+
+            // Exports
+            Route::get('/beneficiaries/export',   [ReportController::class, 'exportBeneficiaries'])->name('admin.reports.beneficiaries.export');
+            Route::get('/events/export',          [ReportController::class, 'exportEvents'])->name('admin.reports.events.export');
+            Route::get('/attendance/export',      [ReportController::class, 'exportAttendance'])->name('admin.reports.attendance.export');
+            Route::get('/service-records/export', [ReportController::class, 'exportServiceRecords'])->name('admin.reports.service-records.export');
+
+            // PDF export routes
+            Route::get('/beneficiaries/export-pdf',     [ReportController::class, 'exportBeneficiariesPdf'])->name('admin.reports.beneficiaries.export.pdf');
+            Route::get('/events/export-pdf',            [ReportController::class, 'exportEventsPdf'])->name('admin.reports.events.export.pdf');
+            Route::get('/attendance/export-pdf',        [ReportController::class, 'exportAttendancePdf'])->name('admin.reports.attendance.export.pdf');
+            Route::get('/service-records/export-pdf',   [ReportController::class, 'exportServiceRecordsPdf'])->name('admin.reports.service-records.export.pdf');
+        });
+    });
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
     Route::resource('beneficiaries', BeneficiaryController::class);
@@ -28,7 +54,7 @@ Route::middleware(['web'])->group(function(){
     Route::post('/attendance/mark', [AttendanceController::class, 'markAttendance'])->name('attendance.mark');
 
     Route::prefix('reports')->name('reports.')->group(function () {
-        Route::get('/',             [ReportController::class, 'index'])->name('index');  // <-- add this
+        Route::get('/',             [ReportController::class, 'index'])->name('index'); 
         Route::get('/beneficiaries',    [ReportController::class, 'beneficiaries'])->name('beneficiaries');
         Route::get('/events',           [ReportController::class, 'events'])->name('events');
         Route::get('/attendance',       [ReportController::class, 'attendance'])->name('attendance');
