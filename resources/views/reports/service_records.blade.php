@@ -12,9 +12,9 @@
             </h3>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary shadow-sm" onclick="window.print()">
-                <i class="fas fa-print"></i> Print
-            </button>
+            <a href="{{ route('reports.service-records.export.pdf', request()->query()) }}" class="btn btn-outline-secondary shadow-sm">
+                <i class="fas fa-file-pdf me-1"></i> Print
+            </a>
             <button class="btn btn-primary shadow-sm px-4" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
                 <i class="fas fa-filter me-1"></i> Filters
             </button>
@@ -120,6 +120,25 @@
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+function confirmDownload(event, url) {
+    event.preventDefault(); // Stop the immediate download
+    
+    Swal.fire({
+        title: 'Generating Report',
+        text: 'Please wait while we prepare your PDF...',
+        icon: 'info',
+        timer: 2000,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading();
+            // Redirect to the download URL after a short delay
+            setTimeout(() => {
+                window.location.href = url;
+            }, 500);
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const buttons = document.querySelectorAll('.btn-view-record');
     

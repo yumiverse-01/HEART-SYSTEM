@@ -6,17 +6,18 @@
     <p class="text-muted">Generate and view reports for evaluation and decision-making</p>
 </div>
 
-<div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(to right, #0d6efd, #004dc7); color: white;">
+<div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(to right, #0d6efd, #004dc7); color: white; position: relative; z-index: 10;">
     <div class="card-body p-4 d-flex justify-content-between align-items-center">
         <div>
-            <h4 class="fw-bold mb-1">Generate New Report</h4>
-            <p class="mb-0 opacity-75">Create comprehensive reports for tracking and analysis</p>
+            <h4 class="fw-bold mb-1">Report Selection</h4>
+            <p class="mb-0 opacity-75">Select a report category to view detailed records</p>
         </div>
         <div class="dropdown">
-            <button class="btn btn-light dropdown-toggle fw-bold text-primary" type="button" data-bs-toggle="dropdown">
-                <i class="fas fa-file-export me-1"></i> Generate Report
+            {{-- Fixed: Standardized button text to "View Reports" --}}
+            <button class="btn btn-light dropdown-toggle fw-bold text-primary" type="button" data-bs-toggle="dropdown" style="position: relative; z-index: 1050;">
+                <i class="fas fa-list me-1"></i> View Reports
             </button>
-            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="z-index: 1060;">
                 <li><a class="dropdown-item" href="{{ route('reports.beneficiaries') }}"><i class="fas fa-users me-2"></i> Beneficiary List</a></li>
                 <li><a class="dropdown-item" href="{{ route('reports.events') }}"><i class="fas fa-calendar-check me-2"></i> Outreach Events</a></li>
                 <li><a class="dropdown-item" href="{{ route('reports.attendance') }}"><i class="fas fa-clipboard-list me-2"></i> Attendance Report</a></li>
@@ -29,10 +30,10 @@
 <div class="row g-4">
     @php
         $reportTypes = [
-            ['title' => 'Beneficiary Demographics', 'desc' => 'Registration trends and profile analytics', 'route' => 'reports.beneficiaries', 'icon' => 'fa-users'],
-            ['title' => 'Event Outreach Summary', 'desc' => 'Overview of past and upcoming outreach activities', 'route' => 'reports.events', 'icon' => 'fa-calendar-alt'],
-            ['title' => 'Attendance Monitoring', 'desc' => 'Detailed records of beneficiary participation', 'route' => 'reports.attendance', 'icon' => 'fa-user-check'],
-            ['title' => 'Health Service Records', 'desc' => 'Logs of medical services and medicine distributed', 'route' => 'reports.service-records', 'icon' => 'fa-notes-medical'],
+            ['title' => 'Beneficiary Demographics', 'desc' => 'Registration trends and profile analytics', 'route' => 'reports.beneficiaries', 'export' => 'reports.beneficiaries.export', 'icon' => 'fa-users'],
+            ['title' => 'Event Outreach Summary', 'desc' => 'Overview of past and upcoming outreach activities', 'route' => 'reports.events', 'export' => 'reports.events.export', 'icon' => 'fa-calendar-alt'],
+            ['title' => 'Attendance Monitoring', 'desc' => 'Detailed records of beneficiary participation', 'route' => 'reports.attendance', 'export' => 'reports.attendance.export', 'icon' => 'fa-user-check'],
+            ['title' => 'Health Service Records', 'desc' => 'Logs of medical services and medicine distributed', 'route' => 'reports.service-records', 'export' => 'reports.service-records.export', 'icon' => 'fa-notes-medical'],
         ];
     @endphp
 
@@ -57,9 +58,9 @@
                         </a>
                     </div>
                     <div class="col-6">
-                        <button class="btn btn-outline-secondary btn-sm w-100" onclick="Swal.fire('Exporting...', 'Preparing CSV download', 'success')">
+                        <a href="{{ route($report['export']) }}" class="btn btn-outline-secondary btn-sm w-100" onclick="showExportAlert()">
                             <i class="fas fa-download me-1"></i> Export CSV
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -67,4 +68,20 @@
     </div>
     @endforeach
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function showExportAlert(e) {
+        // We don't preventDefault here so the download actually starts, 
+        // but we trigger the alert visually.
+        Swal.fire({
+            title: 'Exporting...',
+            text: 'Preparing your CSV download',
+            icon: 'success',
+            timer: 2000,
+            showConfirmButton: false
+        });
+    }
+</script>
 @endsection

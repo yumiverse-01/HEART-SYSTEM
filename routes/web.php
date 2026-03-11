@@ -33,5 +33,17 @@ Route::middleware(['web'])->group(function(){
         Route::get('/events',           [ReportController::class, 'events'])->name('events');
         Route::get('/attendance',       [ReportController::class, 'attendance'])->name('attendance');
         Route::get('/service-records',  [ReportController::class, 'serviceRecords'])->name('service-records');
+
+        // Exports
+        Route::get('/beneficiaries/export',   [ReportController::class, 'exportBeneficiaries'])->name('beneficiaries.export');
+        Route::get('/events/export',          [ReportController::class, 'exportEvents'])->name('events.export');
+        Route::get('/attendance/export',      [ReportController::class, 'exportAttendance'])->name('attendance.export');
+        Route::get('/service-records/export', [ReportController::class, 'exportServiceRecords'])->name('service-records.export');
+
+        // PDF export routes
+        Route::get('/beneficiaries/export-pdf',     [ReportController::class, 'exportBeneficiariesPdf'])->name('beneficiaries.export.pdf');
+        Route::get('/events/export-pdf',            [ReportController::class, 'exportEventsPdf'])->name('events.export.pdf');
+        Route::get('/attendance/export-pdf',        [ReportController::class, 'exportAttendancePdf'])->name('attendance.export.pdf');
+        Route::get('/service-records/export-pdf',   [ReportController::class, 'exportServiceRecordsPdf'])->name('service-records.export.pdf');
     });
 });

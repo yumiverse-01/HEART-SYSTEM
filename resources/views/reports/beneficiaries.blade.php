@@ -13,9 +13,9 @@
             </h3>
         </div>
         <div class="d-flex gap-2">
-            <button class="btn btn-outline-secondary shadow-sm" onclick="window.print()">
-                <i class="fas fa-print"></i> Print
-            </button>
+            <a href="{{ route('reports.beneficiaries.export.pdf', request()->query()) }}" class="btn btn-outline-secondary shadow-sm">
+                <i class="fas fa-file-pdf me-1"></i> Print
+            </a>
             <button class="btn btn-primary shadow-sm px-4" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
                 <i class="fas fa-filter me-1"></i> Filters
             </button>
