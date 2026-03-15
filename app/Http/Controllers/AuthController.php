@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Models\User;
@@ -25,12 +26,10 @@ class AuthController extends Controller
 
         if ($user && Hash::check($request->password, $user->password)) {
             // Update last login timestamp
+            Auth::login($user);
             $user->update(['last_login' => now()]);
-            
-            // Store user info in session
+
             Session::put('user_id', $user->user_id);
-            Session::put('user_name', $user->first_name . ' ' . $user->last_name);
-            Session::put('user_role', $user->role);
 
             return redirect('/dashboard');
         }

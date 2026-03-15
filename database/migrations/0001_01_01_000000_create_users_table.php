@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('username')->unique();
             $table->string('password');
-            $table->enum('role', ['admin', 'healthworker', 'staff'])->default('healthworker');
+            // $table->enum('role', ['admin', 'healthworker', 'staff'])->default('healthworker');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_login')->nullable();

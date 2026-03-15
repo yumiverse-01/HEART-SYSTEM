@@ -17,6 +17,7 @@ class StaffActivityLog extends Model
         'timestamp',
         'activity_details',
         'provided_by',
+        'service_date',
     ];
 
     public function user()

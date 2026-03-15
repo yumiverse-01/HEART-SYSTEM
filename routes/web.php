@@ -14,13 +14,17 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
+Route::get('/admin', function () {
+    return view('admin.auth.login');
+});
+
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/logout', [AuthController::class, 'logout']);
 
-Route::middleware(['web'])->group(function(){
+Route::middleware(['web', 'auth'])->group(function(){
     Route::prefix('admin')->name('dashboard.')->group(function () {
-         Route::get('/', [DashboardController::class, 'index'])->name('admin.index');
+         Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.index');
          Route::resource('/staff-activities', DashboardController::class);
          Route::resource('/user-management', DashboardController::class);
 

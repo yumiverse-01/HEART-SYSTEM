@@ -26,7 +26,7 @@ class User extends Authenticatable
         'last_name',
         'username',
         'password',
-        'role',
+        'role_id',
         'status',
         'last_login',
     ];
@@ -77,5 +77,10 @@ class User extends Authenticatable
     public function activityLogs()
     {
         return $this->hasMany(StaffActivityLog::class, 'user_id', 'user_id');
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id', 'id');
     }
 }

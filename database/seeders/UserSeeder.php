@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'User',
                 'username' => 'admin',
                 'password' => Hash::make('admin123'),
-                'role' => 'Administrator',
+                'role_id' => 1,
                 'status' => 'Active',
             ]
         );
@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Worker',
                 'username' => 'healthworker',
                 'password' => Hash::make('hw123'),
-                'role' => 'Worker',
+                'role_id' => 2,
                 'status' => 'Active',
             ]
         );
