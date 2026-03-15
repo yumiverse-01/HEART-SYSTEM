@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Beneficiary;
-use App\Models\Role;
 use Illuminate\Http\Request;
 
 class BeneficiaryController extends Controller
@@ -12,9 +11,8 @@ class BeneficiaryController extends Controller
     public function index()
     {
         $beneficiaries = Beneficiary::latest()->paginate(10);
-        $roles = Role::all();
 
-        return view('beneficiaries.index',compact('beneficiaries', 'roles'));
+        return view('beneficiaries.index',compact('beneficiaries'));
     }
 
     public function create()
@@ -35,8 +33,7 @@ class BeneficiaryController extends Controller
             'address' => 'nullable|string',
             'contact_number' => 'nullable|string',
             'guardian_name' => 'nullable|string',
-            'date_registered' => 'nullable|date',
-            'role_id' => 'nullable|exists:roles,id',
+            'date_registered' => 'nullable|date'
         ]);
 
         $data = $request->all();
@@ -82,8 +79,7 @@ class BeneficiaryController extends Controller
             'address' => 'nullable|string',
             'contact_number' => 'nullable|string',
             'guardian_name' => 'nullable|string',
-            'date_registered' => 'nullable|date',
-            'role_id' => 'nullable|exists:roles,id',
+            'date_registered' => 'nullable|date'
         ]);
 
         $data = $request->all();

@@ -101,17 +101,6 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-3">
-                            <div class="mb-3">
-                                <label class="form-label">Role</label>
-                                <select name="role_id" id="role_id" class="form-select">
-                                    <option value="">Select Role</option>
-                                    @foreach($roles as $role)
-                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
                         <div class="col-md-9">
                             <div class="mb-3">
                                 <label class="form-label">Email</label>

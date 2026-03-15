@@ -23,7 +23,6 @@ class Beneficiary extends Model
         'date_registered',
         'notes',
         'registered_by',
-        'role_id',
     ];
 
     public function attendances()
@@ -39,10 +38,5 @@ class Beneficiary extends Model
     public function registeredBy()
     {
         return $this->belongsTo(User::class, 'registered_by', 'user_id');
-    }
-
-    public function role()
-    {
-        return $this->belongsTo(Role::class, 'role_id', 'id');
     }
 }
