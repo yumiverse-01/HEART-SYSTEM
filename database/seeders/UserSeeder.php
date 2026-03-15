@@ -13,6 +13,19 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
+        // create super admin
+        User::updateOrCreate(
+            ['email' => 'super_admin@sample.com'],
+            [
+                'first_name' => 'Super Admin',
+                'last_name' => 'User',
+                'username' => 'super_admin',
+                'password' => Hash::make('admin123'),
+                'role_id' => 1,
+                'status' => 'Active',
+            ]
+        );
+
         // create admin
         User::updateOrCreate(
             ['email' => 'admin@sample.com'],
@@ -21,7 +34,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'User',
                 'username' => 'admin',
                 'password' => Hash::make('admin123'),
-                'role_id' => 1,
+                'role_id' => 2,
                 'status' => 'Active',
             ]
         );
@@ -34,7 +47,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Worker',
                 'username' => 'healthworker',
                 'password' => Hash::make('hw123'),
-                'role_id' => 2,
+                'role_id' => 3,
                 'status' => 'Active',
             ]
         );

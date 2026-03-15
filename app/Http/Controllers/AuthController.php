@@ -27,6 +27,7 @@ class AuthController extends Controller
         if ($user && Hash::check($request->password, $user->password)) {
             // Update last login timestamp
             Auth::login($user);
+            $user->load('role');
             $user->update(['last_login' => now()]);
 
             Session::put('user_id', $user->user_id);

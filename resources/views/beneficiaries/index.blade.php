@@ -4,9 +4,11 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h3><i class="fas fa-users"></i> Beneficiaries</h3>
-    <button class="btn btn-primary" id="btnOpenCreateBeneficiary">
-        <i class="fas fa-user-plus"></i> Add Beneficiary
-    </button>
+    @can('create-beneficiaries')
+        <button class="btn btn-primary" id="btnOpenCreateBeneficiary">
+            <i class="fas fa-user-plus"></i> Add Beneficiary
+        </button>
+    @endcan
 </div>
 
 <div class="row g-4">
@@ -25,30 +27,33 @@
                     <p class="card-text mb-1"><i class="fas fa-phone me-1"></i> {{ $b->contact_number ?? '-' }}</p>
                     <p class="card-text mb-3"><i class="fas fa-user-friends me-1"></i> {{ $b->guardian_name ?? '-' }}</p>
                     <div class="mt-auto">
-                        <button type="button" 
-                                class="btn btn-sm btn-outline-primary me-2 btn-edit-beneficiary"
-                                data-beneficiary_id="{{ $b->beneficiary_id }}"
-                                data-first_name="{{ $b->first_name }}"
-                                data-middle_name="{{ $b->middle_name }}"
-                                data-last_name="{{ $b->last_name }}"
-                                data-email="{{ $b->email }}"
-                                data-birth_date="{{ $b->birth_date }}"
-                                data-age="{{ $b->age }}"
-                                data-sex="{{ $b->sex }}"
-                                data-address="{{ $b->address }}"
-                                data-contact_number="{{ $b->contact_number }}"
-                                data-guardian_name="{{ $b->guardian_name }}"
-                                data-date_registered="{{ $b->date_registered }}">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                        
-                        <form action="{{ route('beneficiaries.destroy',$b->beneficiary_id) }}" method="POST" class="d-inline delete-beneficiary-form">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn btn-sm btn-outline-danger btn-delete-beneficiary">
-                                <i class="fas fa-trash"></i> Delete
+                        @can('edit-beneficiaries')
+                            <button type="button" 
+                                    class="btn btn-sm btn-outline-primary me-2 btn-edit-beneficiary"
+                                    data-beneficiary_id="{{ $b->beneficiary_id }}"
+                                    data-first_name="{{ $b->first_name }}"
+                                    data-middle_name="{{ $b->middle_name }}"
+                                    data-last_name="{{ $b->last_name }}"
+                                    data-email="{{ $b->email }}"
+                                    data-birth_date="{{ $b->birth_date }}"
+                                    data-age="{{ $b->age }}"
+                                    data-sex="{{ $b->sex }}"
+                                    data-address="{{ $b->address }}"
+                                    data-contact_number="{{ $b->contact_number }}"
+                                    data-guardian_name="{{ $b->guardian_name }}"
+                                    data-date_registered="{{ $b->date_registered }}">
+                                <i class="fas fa-edit"></i> Edit
                             </button>
-                        </form>
+                        @endcan
+                        @can('delete-beneficiaries')
+                            <form action="{{ route('beneficiaries.destroy',$b->beneficiary_id) }}" method="POST" class="d-inline delete-beneficiary-form">
+                                @csrf
+                                @method('DELETE')
+                                <button type="button" class="btn btn-sm btn-outline-danger btn-delete-beneficiary">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </form>
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -76,13 +81,19 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">First Name</label>
                                 <input type="text" name="first_name" id="first_name" class="form-control" required>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Middle Name</label>
+                                <input type="text" name="middle_name" id="middle_name" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label class="form-label">Last Name</label>
                                 <input type="text" name="last_name" id="last_name" class="form-control" required>
@@ -90,13 +101,18 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-3">
                             <div class="mb-3">
-                                <label class="form-label">Middle Name</label>
-                                <input type="text" name="middle_name" id="middle_name" class="form-control">
+                                <label class="form-label">Role</label>
+                                <select name="role_id" id="role_id" class="form-select">
+                                    <option value="">Select Role</option>
+                                    @foreach($roles as $role)
+                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-9">
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
                                 <input type="email" name="email" id="email" class="form-control" required>

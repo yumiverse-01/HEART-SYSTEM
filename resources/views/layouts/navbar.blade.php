@@ -8,9 +8,9 @@
     </div>
 
     <div class="d-flex align-items-center">
-        @if(session()->has('user_id'))
+        @if(auth()->check())
             <span class="me-3">
-                <i class="fas fa-user-circle"></i> Welcome, <strong>{{ session('user_name') }}</strong>
+                <i class="fas fa-user-circle"></i> Welcome, <strong>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</strong>
             </span>
         @endif
     </div>

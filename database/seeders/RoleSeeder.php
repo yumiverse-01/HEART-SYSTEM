@@ -14,34 +14,25 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         Role::updateOrCreate(
-            ['name' => 'Administrator'],
+            ['name' => 'Super Admin'],
             [
                 'description' => 'Full access to all system features and settings.',
-                'permissions' => json_encode([
-                    'create_users' => true,
-                    'delete_users' => true,
-                    'update_users' => true,
-                    'view_users' => true,
-                    'create_roles' => true,
-                    'delete_roles' => true,
-                    'update_roles' => true,
-                    'view_roles' => true,
-                    'view_reports' => true,
-                    'create_beneficiaries' => true,
-                    'update_beneficiaries' => true,
-                    'delete_beneficiaries' => true,
-                    'view_beneficiaries' => true,
-                    'create_events' => true,
-                    'update_events' => true,
-                    'delete_events' => true,
-                    'view_events' => true,
-                    'create_services' => true,
-                    'update_services' => true,
-                    'delete_services' => true,
-                    'view_services' => true,
-                    'mark_attendance' => true,
-                    'view_attendance' => true,
-                ]),
+                'permissions' => [
+                    'view-beneficiaries', 'create-beneficiaries', 'edit-beneficiaries', 'delete-beneficiaries',
+                    'view-events', 'create-events', 'edit-events', 'delete-events',
+                    'view-attendance', 'mark-attendance',
+                    'view-service-records', 'create-service-records', 'edit-service-records', 'delete-service-records',
+                    'view-reports', 'export-reports',
+                    'access-admin', 'manage-users',
+                ],
+            ]
+        );
+
+        Role::updateOrCreate(
+            ['name' => 'Admin'],
+            [
+                'description' => 'Access to most features with some restrictions on user management.',
+                'permissions' => [],
             ]
         );
 
@@ -49,7 +40,7 @@ class RoleSeeder extends Seeder
             ['name' => 'Worker'],
             [
                 'description' => 'Limited access to specific features based on assigned permissions.',
-                'permissions' => json_encode([]),
+                'permissions' => [],
             ]
         );
     }
