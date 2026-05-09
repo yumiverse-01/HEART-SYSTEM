@@ -13,10 +13,10 @@
             </h3>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('reports.service-records.export.pdf', request()->query()) }}" onclick="showExportAlert(event, this.href)" class="btn btn-outline-secondary border bg-white">
-                <i class="fas fa-file-pdf me-1"></i> Print
+            <a href="{{ route('reports.service-records.export.pdf', request()->query()) }}" onclick="showExportAlert(event, this.href)" class="btn btn-outline-secondary shadow-sm">
+                <i class="fas fa-file-pdf me-1"></i> Export to PDF
             </a>
-            <button class="btn btn-primary px-4" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
+            <button class="btn btn-primary shadow-sm px-4" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
                 <i class="fas fa-filter me-1"></i> Filters
             </button>
         </div>

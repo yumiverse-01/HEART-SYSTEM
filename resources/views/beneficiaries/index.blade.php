@@ -6,7 +6,7 @@
     <h3 class="fw-bold m-0"><i class="fas fa-users me-2"></i>Beneficiaries</h3>
     @can('create-beneficiaries')
         <button class="btn btn-primary px-4 shadow-sm" id="btnOpenCreateBeneficiary" style="background-color: #1e3a8a;">
-            <i class="fas fa-user-plus me-2"></i> Add Beneficiary
+            <i class="fas fa-plus me-2"></i> Add Beneficiary
         </button>
     @endcan
 </div>
@@ -137,47 +137,96 @@
 </div>
 
 {{-- BENEFICIARY MODAL (ADD/EDIT) --}}
-<div class="modal fade" id="beneficiaryModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold" id="beneficiaryModalLabel" style="color: #1e3a8a;">Add Beneficiary</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form id="beneficiaryForm" method="POST">
+<div class="modal fade" id="beneficiaryModal" tabindex="-1" aria-labelledby="beneficiaryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="beneficiaryForm" method="POST" action="">
                 @csrf
                 <input type="hidden" name="_method" id="beneficiaryFormMethod" value="">
-                <div class="modal-body p-4">
-                    <div class="row g-3">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="beneficiaryModalLabel">Add Beneficiary</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
                         <div class="col-md-4">
-                            <label class="form-label small fw-bold">First Name <span class="text-danger">*</span></label>
-                            <input type="text" name="first_name" id="first_name" class="form-control shadow-sm" required>
+                            <div class="mb-3">
+                                <label class="form-label">First Name</label>
+                                <input type="text" name="first_name" id="first_name" class="form-control" required>
+                            </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label small fw-bold">Middle Name</label>
-                            <input type="text" name="middle_name" id="middle_name" class="form-control shadow-sm">
+                            <div class="mb-3">
+                                <label class="form-label">Middle Name</label>
+                                <input type="text" name="middle_name" id="middle_name" class="form-control">
+                            </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label small fw-bold">Last Name <span class="text-danger">*</span></label>
-                            <input type="text" name="last_name" id="last_name" class="form-control shadow-sm" required>
-                        </div>
-                        <div class="col-md-8">
-                            <label class="form-label small fw-bold">Email <span class="text-danger">*</span></label>
-                            <input type="email" name="email" id="email" class="form-control shadow-sm" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label small fw-bold">Sex</label>
-                            <select name="sex" id="sex" class="form-select shadow-sm">
-                                <option value="">Select</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
+                            <div class="mb-3">
+                                <label class="form-label">Last Name</label>
+                                <input type="text" name="last_name" id="last_name" class="form-control" required>
+                            </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" id="email" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Birth Date</label>
+                                <input type="date" name="birth_date" id="birth_date" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Age</label>
+                                <input type="number" name="age" id="age" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="mb-3">
+                                <label class="form-label">Sex</label>
+                                <select name="sex" id="sex" class="form-select">
+                                    <option value="">Select</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Address</label>
+                        <input type="text" name="address" id="address" class="form-control">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Contact Number</label>
+                                <input type="text" name="contact_number" id="contact_number" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label class="form-label">Guardian Name</label>
+                                <input type="text" name="guardian_name" id="guardian_name" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Date Registered</label>
+                        <input type="date" name="date_registered" id="date_registered" class="form-control">
+                    </div>
                 </div>
-                <div class="modal-footer border-0 p-4 pt-0">
-                    <button type="button" class="btn btn-light border" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary px-4 shadow-sm" id="beneficiaryFormSubmit" style="background-color: #1e3a8a;">Save</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="beneficiaryFormSubmit">Save</button>
                 </div>
             </form>
         </div>

@@ -59,7 +59,7 @@ class BeneficiaryController extends Controller
             'email'           => 'required|email|unique:beneficiaries,email',
             'birth_date'      => 'nullable|date',
             'age'             => 'nullable|integer',
-            'sex'             => 'nullable|in:Male,Female,Other',
+            'sex'             => 'required|in:Male,Female,Other',
             'address'         => 'nullable|string',
             'contact_number'  => 'nullable|string',
             'guardian_name'   => 'nullable|string',

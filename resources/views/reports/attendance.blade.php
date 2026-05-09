@@ -10,10 +10,10 @@
         <h3 class="mt-2 fw-bold"><i class="fas fa-user-check text-navy me-2"></i>Event Attendance Report</h3>
     </div>
     <div class="d-flex gap-2">
-        <a href="{{ route('reports.attendance.export.pdf', request()->query()) }}" onclick="showExportAlert(event, this.href)" class="btn btn-outline-secondary border bg-white">
-            <i class="fas fa-file-pdf me-1"></i> Print
+        <a href="{{ route('reports.attendance.export.pdf', request()->query()) }}" onclick="showExportAlert(event, this.href)" class="btn btn-outline-secondary shadow-sm">
+            <i class="fas fa-file-pdf me-1"></i> Export to PDF
         </a>
-        <button class="btn btn-primary px-4" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
+        <button class="btn btn-primary shadow-sm px-4" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
             <i class="fas fa-filter me-1"></i> Filters
         </button>
     </div>
