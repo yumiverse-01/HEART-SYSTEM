@@ -228,4 +228,38 @@
     }
 </script>
 @endpush
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Check for session messages on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(session('success'))
+            Swal.fire({
+                title: 'Success!',
+                text: '{{ session("success") }}',
+                icon: 'success',
+                confirmButtonColor: '#1e3a8a'
+            });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                title: 'Error!',
+                text: '{{ session("error") }}',
+                icon: 'error',
+                confirmButtonColor: '#d33'
+            });
+        @endif
+
+        @if($errors->any())
+            let errorMessages = @json($errors->all());
+            Swal.fire({
+                title: 'Validation Error!',
+                html: errorMessages.join('<br>'),
+                icon: 'error',
+                confirmButtonColor: '#d33'
+            });
+        @endif
+    });
+</script>
 @endsection

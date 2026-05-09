@@ -32,9 +32,65 @@
 </div>
 
 @if(request('event_id'))
+<div class="card border-0 shadow-sm mb-3">
+    <div class="card-body">
+        <form method="GET" action="{{ route('attendance.index') }}" id="beneficiaryFilterForm">
+            <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Search Beneficiaries</label>
+                    <input type="text" name="search" value="{{ request('search') }}" class="form-control shadow-sm" placeholder="Name, email, or contact...">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Age Group</label>
+                    <select name="age_group" class="form-select shadow-sm">
+                        <option value="">All Ages</option>
+                        <option value="children" @if(request('age_group') == 'children') selected @endif>Children (≤17)</option>
+                        <option value="youth" @if(request('age_group') == 'youth') selected @endif>Youth (18-30)</option>
+                        <option value="adults" @if(request('age_group') == 'adults') selected @endif>Adults (31-59)</option>
+                        <option value="senior" @if(request('age_group') == 'senior') selected @endif>Senior (≥60)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold text-muted text-uppercase">Gender</label>
+                    <select name="sex" class="form-select shadow-sm">
+                        <option value="">All Genders</option>
+                        <option value="Male" @if(request('sex') == 'Male') selected @endif>Male</option>
+                        <option value="Female" @if(request('sex') == 'Female') selected @endif>Female</option>
+                        <option value="Other" @if(request('sex') == 'Other') selected @endif>Other</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex align-items-end gap-2">
+                    <button type="submit" class="btn btn-primary btn-sm shadow-sm flex-fill">
+                        <i class="fas fa-search me-1"></i> Filter
+                    </button>
+                    @if(request('search') || request('age_group') || request('sex'))
+                        <a href="{{ route('attendance.index', ['event_id' => request('event_id')]) }}" class="btn btn-outline-secondary btn-sm shadow-sm">
+                            <i class="fas fa-times me-1"></i> Clear
+                        </a>
+                    @endif
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
 <div class="card border-0 shadow-sm">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle bg-white mb-0">
+    <div class="card-header bg-light border-0">
+        <div class="d-flex justify-content-between align-items-center">
+            <h6 class="mb-0 fw-bold text-primary">
+                <i class="fas fa-users me-2"></i>
+                Beneficiaries for Attendance Marking
+                @if(request('search') || request('age_group') || request('sex'))
+                    <small class="text-muted ms-2">(Filtered Results)</small>
+                @endif
+            </h6>
+            <small class="text-muted">{{ $beneficiaries->total() }} beneficiaries found</small>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle bg-white mb-0">
             <thead class="bg-light">
                 <tr class="text-secondary small text-uppercase">
                     <th class="ps-3">Beneficiary Name</th>
@@ -99,6 +155,7 @@
                 @endforelse
             </tbody>
         </table>
+        </div>
     </div>
 </div>
 
@@ -212,6 +269,35 @@
 
 @push('scripts')
 <script>
+    // Enhanced search functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.querySelector('input[name="search"]');
+
+        // Auto-submit search on Enter key
+        if (searchInput) {
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('beneficiaryFilterForm').submit();
+                }
+            });
+        }
+
+        // Add loading state to filter button
+        const filterForm = document.getElementById('beneficiaryFilterForm');
+        if (filterForm) {
+            filterForm.addEventListener('submit', function() {
+                const submitBtn = this.querySelector('button[type="submit"]');
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Searching...';
+                    submitBtn.disabled = true;
+                }
+            });
+        }
+    });
+</script>
+
+<script>
     const attendanceModal = new bootstrap.Modal(document.getElementById('attendanceModal'));
     const viewModal = new bootstrap.Modal(document.getElementById('viewBeneficiaryModal'));
 
@@ -255,4 +341,38 @@
     });
 </script>
 @endpush
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // Check for session messages on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        @if(session('success'))
+            Swal.fire({
+                title: 'Success!',
+                text: '{{ session("success") }}',
+                icon: 'success',
+                confirmButtonColor: '#1e3a8a'
+            });
+        @endif
+
+        @if(session('error'))
+            Swal.fire({
+                title: 'Error!',
+                text: '{{ session("error") }}',
+                icon: 'error',
+                confirmButtonColor: '#d33'
+            });
+        @endif
+
+        @if($errors->any())
+            let errorMessages = @json($errors->all());
+            Swal.fire({
+                title: 'Validation Error!',
+                html: errorMessages.join('<br>'),
+                icon: 'error',
+                confirmButtonColor: '#d33'
+            });
+        @endif
+    });
+</script>
 @endsection

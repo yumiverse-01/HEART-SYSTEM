@@ -14,15 +14,53 @@ class AttendanceController extends Controller
 
     public function index(Request $request)
     {
-        $events        = Event::where('status', '!=', 'Cancelled')->orderBy('event_date', 'desc')->get();
-        $beneficiaries = Beneficiary::latest()->paginate(20);
-        $attendances   = Attendance::where('event_id', $request->event_id)->get();
+        $events = Event::where('status', '!=', 'Cancelled')->orderBy('event_date', 'desc')->get();
+
+        $beneficiariesQuery = Beneficiary::query();
+
+        // Apply search filter if provided
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $beneficiariesQuery->where(function ($query) use ($search) {
+                $query->where('first_name', 'like', "%{$search}%")
+                      ->orWhere('middle_name', 'like', "%{$search}%")
+                      ->orWhere('last_name', 'like', "%{$search}%")
+                      ->orWhere('email', 'like', "%{$search}%")
+                      ->orWhere('contact_number', 'like', "%{$search}%");
+            });
+        }
+
+        // Apply age group filter if provided
+        if ($request->filled('age_group')) {
+            switch ($request->age_group) {
+                case 'children':
+                    $beneficiariesQuery->where('age', '<=', 17);
+                    break;
+                case 'youth':
+                    $beneficiariesQuery->whereBetween('age', [18, 30]);
+                    break;
+                case 'adults':
+                    $beneficiariesQuery->whereBetween('age', [31, 59]);
+                    break;
+                case 'senior':
+                    $beneficiariesQuery->where('age', '>=', 60);
+                    break;
+            }
+        }
+
+        // Apply sex filter if provided
+        if ($request->filled('sex')) {
+            $beneficiariesQuery->where('sex', $request->sex);
+        }
+
+        $beneficiaries = $beneficiariesQuery->latest()->paginate(20)->withQueryString();
+        $attendances = $request->event_id ? Attendance::where('event_id', $request->event_id)->get() : collect();
 
         $this->logActivity(
             'Viewed Attendance List',
             'Attendance',
             'Staff viewed the attendance list' . ($request->event_id ? ' for event ID ' . $request->event_id : ''),
-            ['event_id' => $request->event_id]
+            ['event_id' => $request->event_id, 'search' => $request->search, 'age_group' => $request->age_group, 'sex' => $request->sex]
         );
 
         return view('attendance.index', compact('attendances', 'events', 'beneficiaries'));

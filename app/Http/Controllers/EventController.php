@@ -160,6 +160,7 @@ class EventController extends Controller
 
         $event->delete();
 
-        return redirect()->route('events.index');
+        return redirect()->route('events.index')
+            ->with('success', 'Event deleted successfully');
     }
 }
