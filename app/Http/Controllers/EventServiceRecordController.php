@@ -64,6 +64,16 @@ class EventServiceRecordController extends Controller
             'service_date'    => 'required|date',
         ]);
 
+        // Check for duplicate service record (same beneficiary, event, and service_date)
+        $existingRecord = EventServiceRecord::where('beneficiary_id', $request->beneficiary_id)
+            ->where('event_id', $request->event_id)
+            ->where('service_date', $request->service_date)
+            ->first();
+
+        if ($existingRecord) {
+            return back()->withErrors(['duplicate' => 'A service record for this beneficiary on this event and date already exists.'])->withInput();
+        }
+
         $data                = $request->all();
         $data['provided_by'] = auth()->id() ?? 1;
 
@@ -129,6 +139,20 @@ class EventServiceRecordController extends Controller
             'remarks'         => 'nullable|string',
             'service_date'    => 'required|date',
         ]);
+
+        if ($record->beneficiary_id != $request->beneficiary_id || 
+            $record->event_id != $request->event_id || 
+            $record->service_date !== $request->service_date) {
+            $duplicateRecord = EventServiceRecord::where('beneficiary_id', $request->beneficiary_id)
+                ->where('event_id', $request->event_id)
+                ->where('service_date', $request->service_date)
+                ->where('service_id', '!=', $id)
+                ->first();
+
+            if ($duplicateRecord) {
+                return back()->withErrors(['duplicate' => 'A service record for this beneficiary on this event and date already exists.'])->withInput();
+            }
+        }
 
         $data                = $request->all();
         $data['provided_by'] = auth()->id() ?? 1;

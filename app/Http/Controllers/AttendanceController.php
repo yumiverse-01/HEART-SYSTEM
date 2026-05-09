@@ -52,6 +52,14 @@ class AttendanceController extends Controller
             'time_out'          => 'nullable|date_format:H:i',
         ]);
 
+        $existingAttendance = Attendance::where('beneficiary_id', $request->beneficiary_id)
+            ->where('event_id', $request->event_id)
+            ->first();
+
+        if ($existingAttendance) {
+            return back()->withErrors(['duplicate' => 'This beneficiary already has an attendance record for this event.'])->withInput();
+        }
+
         $attendanceData                = $request->all();
         $attendanceData['recorded_by'] = auth()->id() ?? 1;
 

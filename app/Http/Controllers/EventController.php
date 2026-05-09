@@ -57,6 +57,15 @@ class EventController extends Controller
             'status'     => 'nullable|in:Upcoming,Completed,Cancelled',
         ]);
 
+        // Check for duplicate event (same name and date)
+        $existingEvent = Event::where('event_name', $request->event_name)
+            ->where('event_date', $request->event_date)
+            ->first();
+
+        if ($existingEvent) {
+            return back()->withErrors(['duplicate' => 'An event with this name and date already exists.'])->withInput();
+        }
+
         $eventData               = $request->all();
         $eventData['created_by'] = auth()->id() ?? 1;
 
@@ -113,6 +122,17 @@ class EventController extends Controller
             'description' => 'nullable|string',
             'status'      => 'nullable|in:Upcoming,Completed,Cancelled',
         ]);
+
+        if ($event->event_name !== $request->event_name || $event->event_date !== $request->event_date) {
+            $duplicateEvent = Event::where('event_name', $request->event_name)
+                ->where('event_date', $request->event_date)
+                ->where('event_id', '!=', $id)
+                ->first();
+
+            if ($duplicateEvent) {
+                return back()->withErrors(['duplicate' => 'An event with this name and date already exists.'])->withInput();
+            }
+        }
 
         $event->update($request->all());
 
