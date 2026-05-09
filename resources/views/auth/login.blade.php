@@ -131,13 +131,13 @@
                     @csrf                        
                     <div class="form-group">
                         <label for="email" class="form-label">Email Address</label>
-                        <input type="email" name="email" id="email" class="form-control" placeholder="admin@sample.com" required autofocus>
+                        <input type="email" name="email" id="email" class="form-control" placeholder="Enter email address" required autofocus>
                     </div>
                     
                     <div class="form-group">
                         <label for="password" class="form-label">Password</label>
                         <div class="password-container">
-                            <input type="password" name="password" id="password" class="form-control" placeholder="••••••••" required>
+                            <input type="password" name="password" id="password" class="form-control" placeholder="Enter password" required>
                             <i class="fas fa-eye toggle-password" id="togglePassword"></i>
                         </div>
                     </div>
@@ -146,13 +146,6 @@
                         Login <i class="fas fa-arrow-right ms-2 small"></i>
                     </button>
                 </form>
-
-                <div class="text-center mt-4">
-                    <div class="demo-box text-muted">
-                        <strong class="text-dark">Demo Credentials</strong><br>
-                        admin@sample.com / admin123
-                    </div>
-                </div>
             </div>
         </div>
     </div>

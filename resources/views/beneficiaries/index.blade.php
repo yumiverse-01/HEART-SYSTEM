@@ -151,19 +151,19 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">First Name</label>
+                                <label class="form-label">First Name <span class="text-danger">*</span></label>
                                 <input type="text" name="first_name" id="first_name" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Middle Name</label>
-                                <input type="text" name="middle_name" id="middle_name" class="form-control">
+                                <label class="form-label">Middle Name <span class="text-danger">*</span></label>
+                                <input type="text" name="middle_name" id="middle_name" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Last Name</label>
+                                <label class="form-label">Last Name <span class="text-danger">*</span></label>
                                 <input type="text" name="last_name" id="last_name" class="form-control" required>
                             </div>
                         </div>
@@ -171,7 +171,7 @@
                     <div class="row">
                         <div class="col-md-9">
                             <div class="mb-3">
-                                <label class="form-label">Email</label>
+                                <label class="form-label">Email <span class="text-danger">*</span></label>
                                 <input type="email" name="email" id="email" class="form-control" required>
                             </div>
                         </div>
@@ -179,20 +179,20 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Birth Date</label>
-                                <input type="date" name="birth_date" id="birth_date" class="form-control">
+                                <label class="form-label">Birth Date <span class="text-danger">*</span></label>
+                                <input type="date" name="birth_date" id="birth_date" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Age</label>
-                                <input type="number" name="age" id="age" class="form-control">
+                                <label class="form-label">Age <span class="text-danger">*</span></label>
+                                <input type="number" name="age" id="age" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="mb-3">
-                                <label class="form-label">Sex</label>
-                                <select name="sex" id="sex" class="form-select">
+                                <label class="form-label">Sex <span class="text-danger">*</span></label>
+                                <select name="sex" id="sex" class="form-select" required>
                                     <option value="">Select</option>
                                     <option value="Male">Male</option>
                                     <option value="Female">Female</option>
@@ -202,14 +202,14 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Address</label>
-                        <input type="text" name="address" id="address" class="form-control">
+                        <label class="form-label">Address <span class="text-danger">*</span></label>
+                        <input type="text" name="address" id="address" class="form-control" required>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label">Contact Number</label>
-                                <input type="text" name="contact_number" id="contact_number" class="form-control">
+                                <label class="form-label">Contact Number <span class="text-danger">*</span></label>
+                                <input type="text" name="contact_number" id="contact_number" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -220,8 +220,8 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Date Registered</label>
-                        <input type="date" name="date_registered" id="date_registered" class="form-control">
+                        <label class="form-label">Date Registered <span class="text-danger">*</span></label>
+                        <input type="date" name="date_registered" id="date_registered" class="form-control" required>
                     </div>
                 </div>
                 <div class="modal-footer">

@@ -156,9 +156,13 @@
                                 <small class="text-muted" id="passwordHint" style="display:none;">(leave blank to keep current)</small>
                             </label>
                             <input type="password" name="password" id="password" class="form-control">
+                            <small class="text-muted" id="passwordLengthHint">Minimum 8 characters</small>
+                            <div id="passwordLengthError" class="text-danger small mt-1" style="display: none;">
+                                Password must be at least 8 characters long!
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Confirm Password</label>
+                            <label class="form-label">Confirm Password <span class="text-danger" id="confirmRequired">*</span></label>
                             <input type="password" name="password_confirmation" id="password_confirmation" class="form-control">
                             <div id="passwordError" class="text-danger small mt-1" style="display: none;">
                                 Passwords do not match!
@@ -201,21 +205,36 @@
     const confirmInput = document.getElementById('password_confirmation');
     const submitBtn = document.getElementById('submitBtn');
     const passwordError = document.getElementById('passwordError');
+    const passwordLengthError = document.getElementById('passwordLengthError');
 
     function validatePasswords() {
         const pass = passwordInput.value;
         const confirm = confirmInput.value;
+        const isRequired = passwordInput.required;
 
-        // Only validate if the user has started typing in the confirmation field
+        let hasError = false;
+
+        // Check length if required
+        if (isRequired && pass.length > 0 && pass.length < 8) {
+            passwordLengthError.style.display = 'block';
+            passwordInput.classList.add('is-invalid');
+            hasError = true;
+        } else {
+            passwordLengthError.style.display = 'none';
+            passwordInput.classList.remove('is-invalid');
+        }
+
+        // Check confirmation if user has started typing
         if (confirm.length > 0 && pass !== confirm) {
-            submitBtn.disabled = true;
             passwordError.style.display = 'block';
             confirmInput.classList.add('is-invalid');
+            hasError = true;
         } else {
-            submitBtn.disabled = false;
             passwordError.style.display = 'none';
             confirmInput.classList.remove('is-invalid');
         }
+
+        submitBtn.disabled = hasError;
     }
 
     passwordInput.addEventListener('input', validatePasswords);
@@ -225,7 +244,9 @@
     function resetPasswordValidation() {
         submitBtn.disabled = false;
         passwordError.style.display = 'none';
+        passwordLengthError.style.display = 'none';
         confirmInput.classList.remove('is-invalid');
+        passwordInput.classList.remove('is-invalid');
     }
 
     function openCreateModal() {
@@ -236,7 +257,10 @@
         document.getElementById('submitBtn').innerText  = 'Save User';
         document.getElementById('passwordRequired').style.display = 'inline';
         document.getElementById('passwordHint').style.display     = 'none';
+        document.getElementById('passwordLengthHint').style.display = 'block';
+        document.getElementById('confirmRequired').style.display = 'inline';
         document.getElementById('password').required = true;
+        document.getElementById('password_confirmation').required = true;
 
         resetPasswordValidation();
         userModal.show();
@@ -250,7 +274,10 @@
         document.getElementById('submitBtn').innerText  = 'Update User';
         document.getElementById('passwordRequired').style.display = 'none';
         document.getElementById('passwordHint').style.display     = 'inline';
+        document.getElementById('passwordLengthHint').style.display = 'none';
+        document.getElementById('confirmRequired').style.display = 'none';
         document.getElementById('password').required = false;
+        document.getElementById('password_confirmation').required = false;
 
         document.getElementById('first_name').value = user.first_name;
         document.getElementById('last_name').value  = user.last_name;
