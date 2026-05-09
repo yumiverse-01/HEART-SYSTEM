@@ -259,7 +259,7 @@
             });
 
             document.getElementById('beneficiaryModalLabel').innerText = "Edit Beneficiary";
-            document.getElementById('beneficiaryFormSubmit').innerText = "Update Changes";
+            document.getElementById('beneficiaryFormSubmit').innerText = "Update Beneficiary";
             bModal.show();
         });
     });
