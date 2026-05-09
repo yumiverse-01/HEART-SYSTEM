@@ -32,7 +32,10 @@ class RoleSeeder extends Seeder
             ['name' => 'Admin'],
             [
                 'description' => 'Access to most features with some restrictions on user management.',
-                'permissions' => [],
+                'permissions' => [
+                    'view-reports', 'export-reports',
+                    'access-admin', 'manage-users', 
+                ],
             ]
         );
 

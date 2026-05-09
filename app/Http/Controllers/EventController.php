@@ -3,20 +3,46 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Traits\LogsActivity;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
+    use LogsActivity;
 
-    public function index()
+    public function index(Request $request)
     {
-        $events = Event::latest()->get();
+        $query = Event::query();
 
-        return view('events.index',compact('events'));
+        if ($request->filled('search')) {
+            $query->where('event_name', 'like', '%' . $request->search . '%')
+                  ->orWhere('location', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $events = $query->latest()->paginate(20);
+
+        $this->logActivity(
+            'Viewed Event List',
+            'Outreach Event',
+            'Staff viewed the event list',
+            ['search' => $request->search, 'status_filter' => $request->status]
+        );
+
+        return view('events.index', compact('events'));
     }
 
     public function create()
     {
+        $this->logActivity(
+            'Viewed Event Create Form',
+            'Outreach Event',
+            'Staff opened the event creation form'
+        );
+
         return view('events.create');
     }
 
@@ -25,16 +51,23 @@ class EventController extends Controller
         $request->validate([
             'event_name' => 'required|string|max:255',
             'event_date' => 'required|date',
-            'location' => 'nullable|string',
+            'location'   => 'nullable|string',
             'event_type' => 'nullable|string',
             'description' => 'nullable|string',
-            'status' => 'nullable|in:Upcoming,Completed,Cancelled'
+            'status'     => 'nullable|in:Upcoming,Completed,Cancelled',
         ]);
 
-        $eventData = $request->all();
-        $eventData['created_by'] = auth()->id() ?? 1; // Default to user 1 if not authenticated
-        
-        Event::create($eventData);
+        $eventData               = $request->all();
+        $eventData['created_by'] = auth()->id() ?? 1;
+
+        $event = Event::create($eventData);
+
+        $this->logActivity(
+            'Created Event',
+            'Outreach Event',
+            'Staff created a new event: ' . $event->event_name,
+            ['event_id' => $event->getKey(), 'event_name' => $event->event_name, 'event_date' => $event->event_date, 'status' => $event->status]
+        );
 
         return redirect()->route('events.index')
             ->with('success', 'Event created successfully');
@@ -42,20 +75,30 @@ class EventController extends Controller
 
     public function show($id)
     {
-
         $event = Event::findOrFail($id);
 
-        return view('events.show',compact('event'));
+        $this->logActivity(
+            'Viewed Event Details',
+            'Outreach Event',
+            'Staff viewed details for event: ' . $event->event_name,
+            ['event_id' => $id]
+        );
 
+        return view('events.show', compact('Outreach Event'));
     }
 
     public function edit($id)
     {
-
         $event = Event::findOrFail($id);
 
-        return view('events.edit',compact('event'));
+        $this->logActivity(
+            'Viewed Event Edit Form',
+            'Outreach Event',
+            'Staff opened the edit form for event: ' . $event->event_name,
+            ['event_id' => $id]
+        );
 
+        return view('events.edit', compact('Outreach Event'));
     }
 
     public function update(Request $request, $id)
@@ -63,15 +106,22 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
 
         $request->validate([
-            'event_name' => 'required|string|max:255',
-            'event_date' => 'required|date',
-            'location' => 'nullable|string',
-            'event_type' => 'nullable|string',
+            'event_name'  => 'required|string|max:255',
+            'event_date'  => 'required|date',
+            'location'    => 'nullable|string',
+            'event_type'  => 'nullable|string',
             'description' => 'nullable|string',
-            'status' => 'nullable|in:Upcoming,Completed,Cancelled'
+            'status'      => 'nullable|in:Upcoming,Completed,Cancelled',
         ]);
 
         $event->update($request->all());
+
+        $this->logActivity(
+            'Updated Event',
+            'Outreach Event',
+            'Staff updated event: ' . $event->event_name,
+            ['event_id' => $id, 'event_name' => $event->event_name, 'status' => $event->status]
+        );
 
         return redirect()->route('events.index')
             ->with('success', 'Event updated successfully');
@@ -79,13 +129,17 @@ class EventController extends Controller
 
     public function destroy($id)
     {
-
         $event = Event::findOrFail($id);
+
+        $this->logActivity(
+            'Deleted Event',
+            'Outreach Event',
+            'Staff deleted event: ' . $event->event_name,
+            ['event_id' => $id, 'event_name' => $event->event_name, 'event_date' => $event->event_date]
+        );
 
         $event->delete();
 
         return redirect()->route('events.index');
-
     }
-
 }

@@ -6,23 +6,43 @@
     <p class="text-muted">Generate and view reports for evaluation and decision-making</p>
 </div>
 
-<div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(to right, #0d6efd, #004dc7); color: white; position: relative; z-index: 10;">
-    <div class="card-body p-4 d-flex justify-content-between align-items-center">
-        <div>
-            <h4 class="fw-bold mb-1">Report Selection</h4>
-            <p class="mb-0 opacity-75">Select a report category to view detailed records</p>
-        </div>
-        <div class="dropdown">
-            {{-- Fixed: Standardized button text to "View Reports" --}}
-            <button class="btn btn-light dropdown-toggle fw-bold text-primary" type="button" data-bs-toggle="dropdown" style="position: relative; z-index: 1050;">
-                <i class="fas fa-list me-1"></i> View Reports
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="z-index: 1060;">
-                <li><a class="dropdown-item" href="{{ route('reports.beneficiaries') }}"><i class="fas fa-users me-2"></i> Beneficiary List</a></li>
-                <li><a class="dropdown-item" href="{{ route('reports.events') }}"><i class="fas fa-calendar-check me-2"></i> Outreach Events</a></li>
-                <li><a class="dropdown-item" href="{{ route('reports.attendance') }}"><i class="fas fa-clipboard-list me-2"></i> Attendance Report</a></li>
-                <li><a class="dropdown-item" href="{{ route('reports.service-records') }}"><i class="fas fa-hand-holding-medical me-2"></i> Service Records</a></li>
-            </ul>
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-body p-3 p-md-4">
+        {{-- Flexbox container: Row on Web, Column on Mobile --}}
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            
+            {{-- Left Side: Title and Subtitle --}}
+            <div class="d-flex align-items-center">
+                <div class="bg-light rounded-3 p-3 me-3 d-none d-md-block">
+                    <i class="fas fa-file-invoice fa-lg text-primary"></i>
+                </div>
+                <div>
+                    <h4 class="fw-bold m-0 text-dark">Report Selection</h4>
+                    <p class="text-muted small mb-0">Select a category to view or export records</p>
+                </div>
+            </div>
+
+            {{-- Right Side: The Dropdown --}}
+            <div class="dropdown">
+                <button class="btn btn-primary px-4 shadow-sm w-100 w-md-auto dropdown-toggle fw-bold" 
+                        type="button" 
+                        id="reportsDropdown"
+                        data-bs-toggle="dropdown" 
+                        style="background-color: #1e3a8a; border: none; height: 45px;">
+                    <i class="fas fa-list me-2"></i> View Reports
+                </button>
+                
+                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="reportsDropdown">
+                    <li class="dropdown-header text-uppercase small fw-bold">General Reports</li>
+                    <li><a class="dropdown-item py-2" href="{{ route('reports.beneficiaries') }}"><i class="fas fa-users me-2 text-primary"></i> Beneficiary List</a></li>
+                    <li><a class="dropdown-item py-2" href="{{ route('reports.events') }}"><i class="fas fa-calendar-check me-2 text-primary"></i> Outreach Events</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li class="dropdown-header text-uppercase small fw-bold">Activity Logs</li>
+                    <li><a class="dropdown-item py-2" href="{{ route('reports.attendance') }}"><i class="fas fa-clipboard-list me-2 text-primary"></i> Attendance Report</a></li>
+                    <li><a class="dropdown-item py-2" href="{{ route('reports.service-records') }}"><i class="fas fa-hand-holding-medical me-2 text-primary"></i> Service Records</a></li>
+                </ul>
+            </div>
+
         </div>
     </div>
 </div>

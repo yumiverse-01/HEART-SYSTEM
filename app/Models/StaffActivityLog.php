@@ -12,7 +12,7 @@ class StaffActivityLog extends Model
     protected $fillable = [
         'user_id',
         'activity_name',
-        'activity_type',
+        'module',
         'description',
         'timestamp',
         'activity_details',

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('activity_id');
             $table->foreignId('user_id')->constrained('users', 'user_id')->cascadeOnDelete();
             $table->string('activity_name')->nullable();
-            $table->string('activity_type')->nullable();
+            $table->string('module')->nullable();
             $table->text('description')->nullable();
             $table->dateTime('timestamp');
             $table->text('activity_details')->nullable();

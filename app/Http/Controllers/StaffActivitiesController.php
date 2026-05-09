@@ -11,9 +11,21 @@ class StaffActivitiesController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $query = StaffActivityLog::with(['user', 'providedBy'])->orderBy('timestamp', 'desc');
+
+        if ($request->filled('search')) {
+            $query->where('activity_name', 'like', '%' . $request->search . '%')
+                ->orWhere('description', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->filled('type')) {
+            $query->where('module', $request->type);
+        }
+
+        $logs = $query->paginate(20);
+        return view('staff-activities.index', compact('logs'));
     }
 
     /**
