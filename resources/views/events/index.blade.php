@@ -70,7 +70,7 @@
                     </td>
                     <td class="text-end pe-3">
                         <div class="btn-group shadow-sm">
-                            <button type="button" class="btn btn-sm btn-outline-primary btn-edit-event" data-event_id="{{ $event->event_id }}" data-event_name="{{ $event->event_name }}" data-event_type="{{ $event->event_type }}" data-event_date="{{ $event->event_date }}" data-location="{{ $event->location }}" data-status="{{ $event->status }}">
+                            <button type="button" class="btn btn-sm btn-outline-primary btn-edit-event" data-event_id="{{ $event->event_id }}" data-event_name="{{ $event->event_name }}" data-event_type="{{ $event->event_type }}" data-event_date="{{ $event->event_date }}" data-location="{{ $event->location }}" data-description="{{ $event->description }}" data-status="{{ $event->status }}">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDeleteEvent({{ $event->event_id }})">
@@ -139,8 +139,12 @@
                         </div>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Location</label>
-                        <input type="text" name="location" id="location" class="form-control">
+                        <label class="form-label">Location <span class="text-danger">*</span></label>
+                        <input type="text" name="location" id="location" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" id="description" class="form-control" rows="3"></textarea>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Status <span class="text-danger">*</span></label>
@@ -183,6 +187,7 @@
             document.getElementById('event_type').value = data.event_type;
             document.getElementById('event_date').value = data.event_date;
             document.getElementById('location').value = data.location;
+            document.getElementById('description').value = data.description;
             document.getElementById('status').value = data.status;
             document.getElementById('eventModalLabel').innerText = "Edit Event";
             document.getElementById('eventFormSubmit').innerText = "Update Event";
