@@ -7,7 +7,7 @@
         <a href="{{ route('reports.index') }}" class="text-decoration-none small text-muted">
             <i class="fas fa-arrow-left"></i> Back to Reports
         </a>
-        <h3 class="mt-2 fw-bold"><i class="fas fa-user-check text-navy me-2"></i>Event Attendance Report</h3>
+        <h3 class="mt-3 fw-bold"><i class="fas fa-user-check text-navy me-2"></i>Event Attendance Report</h3>
     </div>
     <div class="d-flex gap-2">
         <a href="{{ route('reports.attendance.export.pdf', request()->query()) }}" onclick="showExportAlert(event, this.href)" class="btn btn-outline-secondary shadow-sm">

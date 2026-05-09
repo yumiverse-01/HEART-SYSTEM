@@ -8,7 +8,7 @@
             <a href="{{ route('reports.index') }}" class="text-decoration-none small text-muted">
                 <i class="fas fa-arrow-left"></i> Back to Reports
             </a>
-            <h3 class="mt-2 fw-bold ">
+            <h3 class="mt-3 fw-bold ">
                 <i class="fas fa-calendar-alt  me-2"></i>Outreach Events Summary
             </h3>
         </div>
