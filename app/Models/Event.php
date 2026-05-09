@@ -14,7 +14,6 @@ class Event extends Model
         'event_type',
         'event_date',
         'location',
-        'description',
         'created_by',
         'status',
     ];

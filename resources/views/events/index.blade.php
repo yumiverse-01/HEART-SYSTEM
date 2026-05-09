@@ -70,7 +70,7 @@
                     </td>
                     <td class="text-end pe-3">
                         <div class="btn-group shadow-sm">
-                            <button type="button" class="btn btn-sm btn-outline-primary btn-edit-event" data-event_id="{{ $event->event_id }}" data-event_name="{{ $event->event_name }}" data-event_type="{{ $event->event_type }}" data-event_date="{{ $event->event_date }}" data-location="{{ $event->location }}" data-description="{{ $event->description }}" data-status="{{ $event->status }}">
+                            <button type="button" class="btn btn-sm btn-outline-primary btn-edit-event" data-event_id="{{ $event->event_id }}" data-event_name="{{ $event->event_name }}" data-event_type="{{ $event->event_type }}" data-event_date="{{ $event->event_date }}" data-location="{{ $event->location }}" data-status="{{ $event->status }}">
                                 <i class="fas fa-edit"></i>
                             </button>
                             <button type="button" class="btn btn-sm btn-outline-danger" onclick="confirmDeleteEvent({{ $event->event_id }})">

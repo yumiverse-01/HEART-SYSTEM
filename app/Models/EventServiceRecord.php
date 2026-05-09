@@ -15,7 +15,6 @@ class EventServiceRecord extends Model
         'service_type',
         'diagnosis',
         'treatment_given',
-        'remarks',
         'provided_by',
         'service_date',
     ];

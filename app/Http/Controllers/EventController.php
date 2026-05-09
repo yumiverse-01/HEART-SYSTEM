@@ -53,7 +53,6 @@ class EventController extends Controller
             'event_date' => 'required|date',
             'location'   => 'nullable|string',
             'event_type' => 'nullable|string',
-            'description' => 'nullable|string',
             'status'     => 'nullable|in:Upcoming,Completed,Cancelled',
         ]);
 
@@ -119,7 +118,6 @@ class EventController extends Controller
             'event_date'  => 'required|date',
             'location'    => 'nullable|string',
             'event_type'  => 'nullable|string',
-            'description' => 'nullable|string',
             'status'      => 'nullable|in:Upcoming,Completed,Cancelled',
         ]);
 

@@ -60,7 +60,6 @@ class EventServiceRecordController extends Controller
             'service_type'    => 'nullable|string|max:255',
             'diagnosis'       => 'nullable|string',
             'treatment_given' => 'nullable|string',
-            'remarks'         => 'nullable|string',
             'service_date'    => 'required|date',
         ]);
 
@@ -136,7 +135,6 @@ class EventServiceRecordController extends Controller
             'service_type'    => 'nullable|string|max:255',
             'diagnosis'       => 'nullable|string',
             'treatment_given' => 'nullable|string',
-            'remarks'         => 'nullable|string',
             'service_date'    => 'required|date',
         ]);
 
