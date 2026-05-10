@@ -1,18 +1,15 @@
-<div class="navbar-custom d-flex justify-content-between align-items-center">
+<div class="topbar-left">
+    <button class="topbar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    <span class="topbar-title">Barangay Portal</span>
+</div>
 
-    <div class="d-flex align-items-center">
-        <button onclick="toggleSidebar()" class="btn btn-light me-3" style="position: relative; z-index: 1060;">
-            <i class="fas fa-bars"></i>
-        </button>
-        <span class="navbar-title">Barangay Portal</span>
+<div class="topbar-user">
+    @if(auth()->check())
+        <strong>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</strong>
+    @endif
+    <div class="topbar-avatar">
+        {{ substr(auth()->user()->first_name ?? 'A', 0, 1) }}
     </div>
-
-    <div class="d-flex align-items-center">
-        @if(auth()->check())
-            <span class="me-3">
-                <i class="fas fa-user-circle"></i> Welcome, <strong>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</strong>
-            </span>
-        @endif
-    </div>
-
 </div>
