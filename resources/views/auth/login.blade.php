@@ -84,7 +84,7 @@
             transform: translateY(-50%);
             cursor: pointer;
             color: #9ca3af;
-            padding: 10px;
+            padding: 10px; /* Larger tap area */
         }
 
         .btn-login {

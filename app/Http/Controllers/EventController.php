@@ -49,12 +49,14 @@ class EventController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'event_name' => 'required|string|max:255',
-            'event_date' => 'required|date',
-            'location'   => 'required|string',
-            'event_type' => 'nullable|string',
-            'description' => 'nullable|string',
-            'status'     => 'nullable|in:Upcoming,Completed,Cancelled',
+            'event_name'    => 'required|string|max:255',
+            'event_date'    => 'required|date',
+            'time_started'  => 'required|date_format:H:i',
+            'time_ended'    => 'required|date_format:H:i|after:time_started',
+            'location'      => 'required|string',
+            'event_type'    => 'nullable|string',
+            'description'   => 'nullable|string',
+            'status'        => 'nullable|in:Upcoming,Completed,Cancelled',
         ]);
 
         // Check for duplicate event (same name and date)
@@ -68,6 +70,9 @@ class EventController extends Controller
 
         $eventData               = $request->all();
         $eventData['created_by'] = auth()->id() ?? 1;
+        // Capitalize event_name
+        $eventData['event_name'] = ucwords(strtolower($request->event_name));
+        $eventData['location']   = ucwords(strtolower($request->location));
 
         $event = Event::create($eventData);
 
@@ -75,7 +80,14 @@ class EventController extends Controller
             'Created Event',
             'Outreach Event',
             'Staff created a new event: ' . $event->event_name,
-            ['event_id' => $event->getKey(), 'event_name' => $event->event_name, 'event_date' => $event->event_date, 'status' => $event->status]
+            [
+                'event_id'      => $event->getKey(),
+                'event_name'    => $event->event_name,
+                'event_date'    => $event->event_date,
+                'time_started'  => $event->time_started,
+                'time_ended'    => $event->time_ended,
+                'status'        => $event->status
+            ]
         );
 
         return redirect()->route('events.index')
@@ -93,7 +105,7 @@ class EventController extends Controller
             ['event_id' => $id]
         );
 
-        return view('events.show', compact('Outreach Event'));
+        return view('events.show', compact('event'));
     }
 
     public function edit($id)
@@ -107,7 +119,7 @@ class EventController extends Controller
             ['event_id' => $id]
         );
 
-        return view('events.edit', compact('Outreach Event'));
+        return view('events.edit', compact('event'));
     }
 
     public function update(Request $request, $id)
@@ -115,12 +127,14 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
 
         $request->validate([
-            'event_name'  => 'required|string|max:255',
-            'event_date'  => 'required|date',
-            'location'    => 'required|string',
-            'event_type'  => 'nullable|string',
-            'description' => 'nullable|string',
-            'status'      => 'nullable|in:Upcoming,Completed,Cancelled',
+            'event_name'    => 'required|string|max:255',
+            'event_date'    => 'required|date',
+            'time_started'  => 'required|date_format:H:i',
+            'time_ended'    => 'required|date_format:H:i|after:time_started',
+            'location'      => 'required|string',
+            'event_type'    => 'nullable|string',
+            'description'   => 'nullable|string',
+            'status'        => 'nullable|in:Upcoming,Completed,Cancelled',
         ]);
 
         if ($event->event_name !== $request->event_name || $event->event_date !== $request->event_date) {
@@ -134,13 +148,24 @@ class EventController extends Controller
             }
         }
 
-        $event->update($request->all());
+        $updateData = $request->all();
+        // Capitalize inputs
+        $updateData['event_name'] = ucwords(strtolower($request->event_name));
+        $updateData['location']   = ucwords(strtolower($request->location));
+
+        $event->update($updateData);
 
         $this->logActivity(
             'Updated Event',
             'Outreach Event',
             'Staff updated event: ' . $event->event_name,
-            ['event_id' => $id, 'event_name' => $event->event_name, 'status' => $event->status]
+            [
+                'event_id'      => $id,
+                'event_name'    => $event->event_name,
+                'time_started'  => $event->time_started,
+                'time_ended'    => $event->time_ended,
+                'status'        => $event->status
+            ]
         );
 
         return redirect()->route('events.index')
@@ -155,7 +180,13 @@ class EventController extends Controller
             'Deleted Event',
             'Outreach Event',
             'Staff deleted event: ' . $event->event_name,
-            ['event_id' => $id, 'event_name' => $event->event_name, 'event_date' => $event->event_date]
+            [
+                'event_id'      => $id,
+                'event_name'    => $event->event_name,
+                'event_date'    => $event->event_date,
+                'time_started'  => $event->time_started,
+                'time_ended'    => $event->time_ended
+            ]
         );
 
         $event->delete();

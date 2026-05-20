@@ -61,7 +61,7 @@ class BeneficiaryController extends Controller
             'age'             => 'nullable|integer',
             'sex'             => 'required|in:Male,Female,Other',
             'address'         => 'nullable|string',
-            'contact_number'  => 'nullable|string',
+            'contact_number'  => 'nullable|regex:/^(09|\+639)\d{9}$/|max:11',
             'guardian_name'   => 'nullable|string',
             'date_registered' => 'nullable|date',
         ]);
@@ -71,13 +71,25 @@ class BeneficiaryController extends Controller
             $data['date_registered'] = now();
         }
 
+        // Apply capitalization to text fields
+        $data['first_name']   = ucwords(strtolower($request->first_name));
+        $data['middle_name']  = $request->middle_name ? ucwords(strtolower($request->middle_name)) : null;
+        $data['last_name']    = ucwords(strtolower($request->last_name));
+        $data['guardian_name'] = $request->guardian_name ? ucwords(strtolower($request->guardian_name)) : null;
+        $data['address']      = $request->address ? ucwords(strtolower($request->address)) : null;
+
         $beneficiary = Beneficiary::create($data);
 
         $this->logActivity(
             'Created Beneficiary',
             'Beneficiary',
             'Staff created a new beneficiary: ' . $beneficiary->first_name . ' ' . $beneficiary->last_name,
-            ['beneficiary_id' => $beneficiary->getKey(), 'name' => $beneficiary->first_name . ' ' . $beneficiary->last_name, 'email' => $beneficiary->email]
+            [
+                'beneficiary_id' => $beneficiary->getKey(),
+                'name'           => $beneficiary->first_name . ' ' . $beneficiary->last_name,
+                'email'          => $beneficiary->email,
+                'contact_number' => $beneficiary->contact_number
+            ]
         );
 
         return redirect()->route('beneficiaries.index')
@@ -125,7 +137,7 @@ class BeneficiaryController extends Controller
             'age'             => 'nullable|integer',
             'sex'             => 'nullable|in:Male,Female,Other',
             'address'         => 'nullable|string',
-            'contact_number'  => 'nullable|string',
+            'contact_number'  => 'nullable|regex:/^(09|\+639)\d{9}$/|max:11',
             'guardian_name'   => 'nullable|string',
             'date_registered' => 'nullable|date',
         ]);
@@ -135,13 +147,24 @@ class BeneficiaryController extends Controller
             $data['date_registered'] = now();
         }
 
+        // Apply capitalization to text fields
+        $data['first_name']   = ucwords(strtolower($request->first_name));
+        $data['middle_name']  = $request->middle_name ? ucwords(strtolower($request->middle_name)) : null;
+        $data['last_name']    = ucwords(strtolower($request->last_name));
+        $data['guardian_name'] = $request->guardian_name ? ucwords(strtolower($request->guardian_name)) : null;
+        $data['address']      = $request->address ? ucwords(strtolower($request->address)) : null;
+
         $beneficiary->update($data);
 
         $this->logActivity(
             'Updated Beneficiary',
             'Beneficiary',
             'Staff updated beneficiary: ' . $beneficiary->first_name . ' ' . $beneficiary->last_name,
-            ['beneficiary_id' => $id, 'name' => $beneficiary->first_name . ' ' . $beneficiary->last_name]
+            [
+                'beneficiary_id' => $id,
+                'name'           => $beneficiary->first_name . ' ' . $beneficiary->last_name,
+                'contact_number' => $beneficiary->contact_number
+            ]
         );
 
         return redirect()->route('beneficiaries.index')
@@ -156,7 +179,11 @@ class BeneficiaryController extends Controller
             'Deleted Beneficiary',
             'Beneficiary',
             'Staff deleted beneficiary: ' . $beneficiary->first_name . ' ' . $beneficiary->last_name,
-            ['beneficiary_id' => $id, 'name' => $beneficiary->first_name . ' ' . $beneficiary->last_name, 'email' => $beneficiary->email]
+            [
+                'beneficiary_id' => $id,
+                'name'           => $beneficiary->first_name . ' ' . $beneficiary->last_name,
+                'email'          => $beneficiary->email
+            ]
         );
 
         $beneficiary->delete();

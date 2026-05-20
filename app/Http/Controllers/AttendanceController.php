@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\Event;
 use App\Models\Beneficiary;
+use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
@@ -86,8 +87,6 @@ class AttendanceController extends Controller
             'beneficiary_id'    => 'required|exists:beneficiaries,beneficiary_id',
             'event_id'          => 'required|exists:events,event_id',
             'attendance_status' => 'required|in:Present,Absent',
-            'time_in'           => 'nullable|date_format:H:i',
-            'time_out'          => 'nullable|date_format:H:i',
         ]);
 
         $existingAttendance = Attendance::where('beneficiary_id', $request->beneficiary_id)
@@ -98,8 +97,24 @@ class AttendanceController extends Controller
             return back()->withErrors(['duplicate' => 'This beneficiary already has an attendance record for this event.'])->withInput();
         }
 
-        $attendanceData                = $request->all();
-        $attendanceData['recorded_by'] = auth()->id() ?? 1;
+        $event = Event::findOrFail($request->event_id);
+        
+        $attendanceData = [
+            'beneficiary_id'    => $request->beneficiary_id,
+            'event_id'          => $request->event_id,
+            'attendance_status' => $request->attendance_status,
+            'recorded_by'       => auth()->id() ?? 1,
+        ];
+
+        // Auto-populate time_in and time_out based on attendance_status
+        if ($request->attendance_status === 'Present') {
+            $attendanceData['time_in']  = $event->time_started ?? now()->format('H:i');
+            $attendanceData['time_out'] = $event->time_ended ?? now()->format('H:i');
+        } else {
+            // Absent: set times to NULL
+            $attendanceData['time_in']  = null;
+            $attendanceData['time_out'] = null;
+        }
 
         $attendance = Attendance::create($attendanceData);
 
@@ -112,6 +127,8 @@ class AttendanceController extends Controller
                 'beneficiary_id'    => $request->beneficiary_id,
                 'event_id'          => $request->event_id,
                 'attendance_status' => $request->attendance_status,
+                'time_in'           => $attendanceData['time_in'],
+                'time_out'          => $attendanceData['time_out'],
             ]
         );
 
@@ -155,12 +172,24 @@ class AttendanceController extends Controller
 
         $request->validate([
             'attendance_status' => 'required|in:Present,Absent',
-            'time_in'           => 'nullable|date_format:H:i',
-            'time_out'          => 'nullable|date_format:H:i',
         ]);
 
-        $attendanceData                = $request->all();
-        $attendanceData['recorded_by'] = auth()->id() ?? 1;
+        $event = Event::findOrFail($attendance->event_id);
+
+        $attendanceData = [
+            'attendance_status' => $request->attendance_status,
+            'recorded_by'       => auth()->id() ?? 1,
+        ];
+
+        // Auto-populate time_in and time_out based on attendance_status
+        if ($request->attendance_status === 'Present') {
+            $attendanceData['time_in']  = $event->time_started ?? now()->format('H:i');
+            $attendanceData['time_out'] = $event->time_ended ?? now()->format('H:i');
+        } else {
+            // Absent: set times to NULL
+            $attendanceData['time_in']  = null;
+            $attendanceData['time_out'] = null;
+        }
 
         $attendance->update($attendanceData);
 
@@ -171,8 +200,8 @@ class AttendanceController extends Controller
             [
                 'attendance_id'     => $id,
                 'attendance_status' => $request->attendance_status,
-                'time_in'           => $request->time_in,
-                'time_out'          => $request->time_out,
+                'time_in'           => $attendanceData['time_in'],
+                'time_out'          => $attendanceData['time_out'],
             ]
         );
 
@@ -180,15 +209,19 @@ class AttendanceController extends Controller
             ->with('success', 'Attendance updated successfully');
     }
 
+    /**
+     * Mark attendance using simple Present/Absent buttons
+     * Simplified workflow without complex time input fields
+     */
     public function markAttendance(Request $request)
     {
         $request->validate([
-            'beneficiary_id'    => 'required',
-            'event_id'          => 'required',
+            'beneficiary_id'    => 'required|exists:beneficiaries,beneficiary_id',
+            'event_id'          => 'required|exists:events,event_id',
             'attendance_status' => 'required|in:Present,Absent',
-            'time_in'           => 'nullable|date_format:H:i',
-            'time_out'          => 'nullable|date_format:H:i',
         ]);
+
+        $event = Event::findOrFail($request->event_id);
 
         $attendance = Attendance::where('beneficiary_id', $request->beneficiary_id)
             ->where('event_id', $request->event_id)
@@ -196,10 +229,18 @@ class AttendanceController extends Controller
 
         $attendanceData = [
             'attendance_status' => $request->attendance_status,
-            'time_in'           => $request->time_in,
-            'time_out'          => $request->time_out,
             'recorded_by'       => auth()->id() ?? 1,
         ];
+
+        // Auto-populate time_in and time_out based on attendance_status
+        if ($request->attendance_status === 'Present') {
+            $attendanceData['time_in']  = $event->time_started ?? now()->format('H:i');
+            $attendanceData['time_out'] = $event->time_ended ?? now()->format('H:i');
+        } else {
+            // Absent: set times to NULL
+            $attendanceData['time_in']  = null;
+            $attendanceData['time_out'] = null;
+        }
 
         if ($attendance) {
             $attendance->update($attendanceData);
@@ -220,6 +261,8 @@ class AttendanceController extends Controller
                 'beneficiary_id'    => $request->beneficiary_id,
                 'event_id'          => $request->event_id,
                 'attendance_status' => $request->attendance_status,
+                'time_in'           => $attendanceData['time_in'],
+                'time_out'          => $attendanceData['time_out'],
                 'action'            => $action,
             ]
         );
