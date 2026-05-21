@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <title>Beneficiary Registration Report</title>
     <style>
+        tbody td {
+            text-transform: uppercase; /* add this */
+        }
+        td.email-cell { text-transform: none; }
         /* General Setup */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -131,7 +135,7 @@
                     <div class="name">{{ $b->last_name }}, {{ $b->first_name }}</div>
                     <div class="sub">ID: #{{ $b->beneficiary_id }}</div>
                 </td>
-                <td style="word-break: break-all;">{{ $b->email ?? '—' }}</td>
+                <td class="email-cell" style="word-break: break-all;">{{ $b->email ?? '—' }}</td>
                 <td style="text-align: center;">
                     <span class="badge">{{ $b->sex ?? '—' }}</span>
                 </td>

@@ -62,27 +62,27 @@
                         <td class="ps-3">
                             <div class="d-flex align-items-center gap-2">
                                 <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                     style="width:32px; height:32px; font-size:0.7rem; font-weight:600;">
+                                    style="width:32px; height:32px; font-size:0.7rem; font-weight:600;">
                                     {{ strtoupper(substr($b->first_name, 0, 1)) }}{{ strtoupper(substr($b->last_name, 0, 1)) }}
                                 </div>
                                 <div>
-                                    <div class="fw-bold text-primary">{{ $b->first_name }} {{ $b->middle_name }} {{ $b->last_name }}</div>
+                                    <div class="fw-bold text-primary" style="text-transform:uppercase">{{ $b->first_name }} {{ $b->middle_name }} {{ $b->last_name }}</div>
                                     <small class="text-muted"><i class="far fa-envelope me-1"></i>{{ $b->email }}</small>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <span class="badge bg-light text-dark border px-2">{{ $b->sex ?? 'N/A' }}</span>
-                            <small class="d-block text-muted mt-1">{{ $b->age ?? '??' }} yrs old</small>
+                            <span class="badge bg-light text-dark border px-2" style="text-transform:uppercase">{{ $b->sex ?? 'N/A' }}</span>
+                            <small class="d-block text-muted mt-1" style="text-transform:uppercase">{{ $b->age ?? '??' }} yrs old</small>
                         </td>
                         <td>
-                            <div class="small"><i class="fas fa-phone text-muted me-1"></i>{{ $b->contact_number ?? '—' }}</div>
-                            <div class="small text-truncate" style="max-width:160px;">
+                            <div class="small" style="text-transform:uppercase"><i class="fas fa-phone text-muted me-1"></i>{{ $b->contact_number ?? '—' }}</div>
+                            <div class="small text-truncate" style="max-width:160px; text-transform:uppercase">
                                 <i class="fas fa-shield-alt text-muted me-1"></i>{{ $b->guardian_name ?? 'No Guardian' }}
                             </div>
                         </td>
                         <td class="text-end pe-3">
-                            <div class="fw-bold small">
+                            <div class="fw-bold small" style="text-transform:uppercase">
                                 {{ $b->date_registered ? \Carbon\Carbon::parse($b->date_registered)->format('M d, Y') : '—' }}
                             </div>
                         </td>
@@ -107,14 +107,14 @@
                     {{ strtoupper(substr($b->first_name, 0, 1)) }}{{ strtoupper(substr($b->last_name, 0, 1)) }}
                 </div>
                 <div style="min-width:0;">
-                    <div class="fw-bold text-primary text-truncate">{{ $b->first_name }} {{ $b->middle_name }} {{ $b->last_name }}</div>
+                    <div class="fw-bold text-primary text-truncate" style="text-transform:uppercase">{{ $b->first_name }} {{ $b->middle_name }} {{ $b->last_name }}</div>
                     <small class="text-muted d-block text-truncate"><i class="far fa-envelope me-1"></i>{{ $b->email }}</small>
                     <div class="d-flex align-items-center gap-2 mt-1 flex-wrap">
-                        <span class="badge bg-light text-dark border">{{ $b->sex ?? 'N/A' }}</span>
-                        <small class="text-muted">{{ $b->age ?? '??' }} yrs</small>
-                        <small class="text-muted"><i class="fas fa-phone me-1"></i>{{ $b->contact_number ?? '—' }}</small>
+                        <span class="badge bg-light text-dark border" style="text-transform:uppercase">{{ $b->sex ?? 'N/A' }}</span>
+                        <small class="text-muted" style="text-transform:uppercase">{{ $b->age ?? '??' }} yrs</small>
+                        <small class="text-muted" style="text-transform:uppercase"><i class="fas fa-phone me-1"></i>{{ $b->contact_number ?? '—' }}</small>
                     </div>
-                    <small class="text-muted d-block mt-1">
+                    <small class="text-muted d-block mt-1" style="text-transform:uppercase">
                         <i class="far fa-calendar-alt me-1"></i>
                         Registered: {{ $b->date_registered ? \Carbon\Carbon::parse($b->date_registered)->format('M d, Y') : '—' }}
                     </small>

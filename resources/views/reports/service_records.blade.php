@@ -75,26 +75,26 @@
                 @forelse($records as $record)
                     <tr>
                         <td class="ps-3">
-                            <div class="fw-bold text-primary">{{ $record->service_type ?? 'General Checkup' }}</div>
-                            <small class="text-muted">
+                            <div class="fw-bold text-primary" style="text-transform:uppercase">{{ $record->service_type ?? 'General Checkup' }}</div>
+                            <small class="text-muted" style="text-transform:uppercase">
                                 <i class="far fa-calendar-alt me-1"></i>
                                 {{ \Carbon\Carbon::parse($record->service_date)->format('M d, Y') }}
                             </small>
                         </td>
                         <td>
-                            <div class="fw-bold">{{ $record->beneficiary->first_name }} {{ $record->beneficiary->last_name }}</div>
-                            <small class="text-muted">ID: #{{ $record->beneficiary_id }}</small>
+                            <div class="fw-bold" style="text-transform:uppercase">{{ $record->beneficiary->first_name }} {{ $record->beneficiary->last_name }}</div>
+                            <small class="text-muted" style="text-transform:uppercase">ID: #{{ $record->beneficiary_id }}</small>
                         </td>
                         <td>
-                            <span class="badge bg-light text-dark border">{{ $record->event->event_name ?? 'N/A' }}</span>
+                            <span class="badge bg-light text-dark border" style="text-transform:uppercase">{{ $record->event->event_name ?? 'N/A' }}</span>
                         </td>
                         <td>
                             <div class="d-flex align-items-center gap-2">
                                 <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                                     style="width:28px; height:28px; font-size:0.65rem; font-weight:600;">
+                                    style="width:28px; height:28px; font-size:0.65rem; font-weight:600;">
                                     {{ strtoupper(substr($record->providedBy->first_name ?? 'U', 0, 1)) }}{{ strtoupper(substr($record->providedBy->last_name ?? 'N', 0, 1)) }}
                                 </div>
-                                <small class="text-secondary">{{ $record->providedBy->first_name ?? 'Unknown' }} {{ $record->providedBy->last_name ?? '' }}</small>
+                                <small class="text-secondary" style="text-transform:uppercase">{{ $record->providedBy->first_name ?? 'Unknown' }} {{ $record->providedBy->last_name ?? '' }}</small>
                             </div>
                         </td>
                         <td class="text-end pe-3">
@@ -122,14 +122,14 @@
         <div class="table-card mb-2 p-3">
             <div class="d-flex justify-content-between align-items-start gap-2">
                 <div style="min-width:0;">
-                    <div class="fw-bold text-primary text-truncate">{{ $record->service_type ?? 'General Checkup' }}</div>
-                    <small class="text-muted d-block">
+                    <div class="fw-bold text-primary text-truncate" style="text-transform:uppercase">{{ $record->service_type ?? 'General Checkup' }}</div>
+                    <small class="text-muted d-block" style="text-transform:uppercase">
                         <i class="far fa-calendar-alt me-1"></i>{{ \Carbon\Carbon::parse($record->service_date)->format('M d, Y') }}
                     </small>
-                    <small class="d-block mt-1 fw-bold">{{ $record->beneficiary->first_name }} {{ $record->beneficiary->last_name }}</small>
-                    <span class="badge bg-light text-dark border mt-1">{{ $record->event->event_name ?? 'N/A' }}</span>
-                    <div class="mt-1 small text-truncate"><strong>Dx:</strong> {{ $record->diagnosis ?? 'None' }}</div>
-                    <div class="small text-muted text-truncate"><strong>Rx:</strong> {{ $record->treatment_given ?? 'None' }}</div>
+                    <small class="d-block mt-1 fw-bold" style="text-transform:uppercase">{{ $record->beneficiary->first_name }} {{ $record->beneficiary->last_name }}</small>
+                    <span class="badge bg-light text-dark border mt-1" style="text-transform:uppercase">{{ $record->event->event_name ?? 'N/A' }}</span>
+                    <div class="mt-1 small text-truncate" style="text-transform:uppercase"><strong>Dx:</strong> {{ $record->diagnosis ?? 'None' }}</div>
+                    <div class="small text-muted text-truncate" style="text-transform:uppercase"><strong>Rx:</strong> {{ $record->treatment_given ?? 'None' }}</div>
                 </div>
                 <button class="btn btn-sm btn-outline-primary flex-shrink-0 btn-view-record"
                         data-diagnosis="{{ $record->diagnosis }}"

@@ -68,22 +68,22 @@
                     @endphp
                     <tr>
                         <td class="ps-3">
-                            <div class="fw-bold text-primary">{{ $event->event_name }}</div>
-                            <small class="text-muted">
+                            <div class="fw-bold text-primary" style="text-transform:uppercase">{{ $event->event_name }}</div>
+                            <small class="text-muted" style="text-transform:uppercase">
                                 <i class="far fa-calendar-alt me-1"></i>
                                 {{ $event->event_date ? \Carbon\Carbon::parse($event->event_date)->format('M d, Y') : '—' }}
                             </small>
                         </td>
                         <td>
-                            <span class="badge bg-light text-dark border px-3 rounded-pill">{{ $event->event_type ?? 'General' }}</span>
+                            <span class="badge bg-light text-dark border px-3 rounded-pill" style="text-transform:uppercase">{{ $event->event_type ?? 'General' }}</span>
                         </td>
                         <td>
-                            <div class="text-truncate small" style="max-width:200px;">
+                            <div class="text-truncate small" style="max-width:200px; text-transform:uppercase">
                                 <i class="fas fa-map-marker-alt text-muted me-1"></i>{{ $event->location ?? '—' }}
                             </div>
                         </td>
                         <td class="text-end pe-3">
-                            <span class="badge {{ $statusClass }} px-3">{{ $event->status }}</span>
+                            <span class="badge {{ $statusClass }} px-3" style="text-transform:uppercase">{{ $event->status }}</span>
                         </td>
                     </tr>
                 @empty
@@ -110,17 +110,18 @@
         <div class="table-card mb-2 p-3">
             <div class="d-flex justify-content-between align-items-start gap-2">
                 <div style="min-width:0;">
-                    <div class="fw-bold text-primary text-truncate">{{ $event->event_name }}</div>
-                    <small class="text-muted d-block">
+                    <div class="fw-bold text-primary text-truncate" style="text-transform:uppercase">{{ $event->event_name }}</div>
+                    <small class="text-muted d-block" style="text-transform:uppercase">
                         <i class="far fa-calendar-alt me-1"></i>
                         {{ $event->event_date ? \Carbon\Carbon::parse($event->event_date)->format('M d, Y') : '—' }}
                     </small>
                     <div class="d-flex align-items-center gap-2 mt-1 flex-wrap">
-                        <span class="badge bg-light text-dark border rounded-pill">{{ $event->event_type ?? 'General' }}</span>
-                        <small class="text-muted text-truncate">
+                        <span class="badge bg-light text-dark border rounded-pill" style="text-transform:uppercase">{{ $event->event_type ?? 'General' }}</span>
+                        <small class="text-muted text-truncate" style="text-transform:uppercase">
                             <i class="fas fa-map-marker-alt me-1"></i>{{ $event->location ?? '—' }}
                         </small>
                     </div>
+                    <span class="badge {{ $statusClass }} px-3 flex-shrink-0" style="text-transform:uppercase">{{ $event->status }}</span>
                 </div>
                 <span class="badge {{ $statusClass }} px-3 flex-shrink-0">{{ $event->status }}</span>
             </div>

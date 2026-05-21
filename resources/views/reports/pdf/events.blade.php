@@ -4,6 +4,9 @@
     <meta charset="utf-8">
     <title>Outreach Events Report</title>
     <style>
+        tbody td {
+            text-transform: uppercase; /* add this */
+        }
         /* General Setup */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         

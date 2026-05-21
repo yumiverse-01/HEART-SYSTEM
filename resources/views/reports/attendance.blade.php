@@ -71,19 +71,19 @@
                 @forelse($attendances as $a)
                     <tr>
                         <td class="ps-3">
-                            <div class="fw-bold text-primary">{{ $a->beneficiary->first_name }} {{ $a->beneficiary->last_name }}</div>
+                            <div class="fw-bold text-primary" style="text-transform:uppercase">{{ $a->beneficiary->first_name }} {{ $a->beneficiary->last_name }}</div>
                             <small class="text-muted"><i class="far fa-envelope me-1"></i>{{ $a->beneficiary->email }}</small>
                         </td>
-                        <td class="small">{{ $a->time_in  ? \Carbon\Carbon::parse($a->time_in)->format('h:i A')  : '—' }}</td>
-                        <td class="small">{{ $a->time_out ? \Carbon\Carbon::parse($a->time_out)->format('h:i A') : '—' }}</td>
+                        <td class="small" style="text-transform:uppercase">{{ $a->time_in  ? \Carbon\Carbon::parse($a->time_in)->format('h:i A')  : '—' }}</td>
+                        <td class="small" style="text-transform:uppercase">{{ $a->time_out ? \Carbon\Carbon::parse($a->time_out)->format('h:i A') : '—' }}</td>
                         <td>
-                            <span class="badge {{ $a->attendance_status == 'Present' ? 'bg-success' : 'bg-danger' }} px-3">
+                            <span class="badge {{ $a->attendance_status == 'Present' ? 'bg-success' : 'bg-danger' }} px-3" style="text-transform:uppercase">
                                 {{ $a->attendance_status }}
                             </span>
                         </td>
                         <td class="text-end pe-3">
-                            <div class="fw-bold small">{{ $a->event->event_name }}</div>
-                            <small class="text-muted">{{ \Carbon\Carbon::parse($a->event->event_date)->format('M d, Y') }}</small>
+                            <div class="fw-bold small" style="text-transform:uppercase">{{ $a->event->event_name }}</div>
+                            <small class="text-muted" style="text-transform:uppercase">{{ \Carbon\Carbon::parse($a->event->event_date)->format('M d, Y') }}</small>
                         </td>
                     </tr>
                 @empty
@@ -100,22 +100,22 @@
 <div class="d-md-none">
     @forelse($attendances as $a)
         <div class="table-card mb-2 p-3">
-            <div class="fw-bold text-primary text-truncate">{{ $a->beneficiary->first_name }} {{ $a->beneficiary->last_name }}</div>
+            <div class="fw-bold text-primary text-truncate" style="text-transform:uppercase">{{ $a->beneficiary->first_name }} {{ $a->beneficiary->last_name }}</div>
             <small class="text-muted d-block text-truncate"><i class="far fa-envelope me-1"></i>{{ $a->beneficiary->email }}</small>
             <div class="d-flex align-items-center gap-2 mt-2 flex-wrap">
-                <span class="badge {{ $a->attendance_status == 'Present' ? 'bg-success' : 'bg-danger' }} px-3">
+                <span class="badge {{ $a->attendance_status == 'Present' ? 'bg-success' : 'bg-danger' }} px-3" style="text-transform:uppercase">
                     {{ $a->attendance_status }}
                 </span>
                 @if($a->time_in)
-                    <small class="text-muted">
+                    <small class="text-muted" style="text-transform:uppercase">
                         <i class="far fa-clock me-1"></i>In: {{ \Carbon\Carbon::parse($a->time_in)->format('h:i A') }}
                         @if($a->time_out) · Out: {{ \Carbon\Carbon::parse($a->time_out)->format('h:i A') }} @endif
                     </small>
                 @endif
             </div>
             <div class="mt-1">
-                <small class="fw-bold d-block">{{ $a->event->event_name }}</small>
-                <small class="text-muted">{{ \Carbon\Carbon::parse($a->event->event_date)->format('M d, Y') }}</small>
+                <small class="fw-bold d-block" style="text-transform:uppercase">{{ $a->event->event_name }}</small>
+                <small class="text-muted" style="text-transform:uppercase">{{ \Carbon\Carbon::parse($a->event->event_date)->format('M d, Y') }}</small>
             </div>
         </div>
     @empty
