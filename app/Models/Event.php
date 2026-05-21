@@ -17,6 +17,8 @@ class Event extends Model
         'description',
         'created_by',
         'status',
+        'time_started',
+        'time_ended'
     ];
 
     public function attendances()
