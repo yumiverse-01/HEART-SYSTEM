@@ -108,14 +108,12 @@ class AttendanceController extends Controller
 
         // Auto-populate time_in and time_out based on attendance_status
         if ($request->attendance_status === 'Present') {
-            $attendanceData['time_in']  = $event->time_started ?? now()->format('H:i');
-            $attendanceData['time_out'] = $event->time_ended ?? now()->format('H:i');
+            $attendanceData['time_in']  = $request->filled('time_in')  ? $request->time_in  : ($event->time_started ?? now()->format('H:i'));
+            $attendanceData['time_out'] = $request->filled('time_out') ? $request->time_out : ($event->time_ended   ?? now()->format('H:i'));
         } else {
-            // Absent: set times to NULL
             $attendanceData['time_in']  = null;
             $attendanceData['time_out'] = null;
         }
-
         $attendance = Attendance::create($attendanceData);
 
         $this->logActivity(
@@ -183,10 +181,9 @@ class AttendanceController extends Controller
 
         // Auto-populate time_in and time_out based on attendance_status
         if ($request->attendance_status === 'Present') {
-            $attendanceData['time_in']  = $event->time_started ?? now()->format('H:i');
-            $attendanceData['time_out'] = $event->time_ended ?? now()->format('H:i');
+            $attendanceData['time_in']  = $request->filled('time_in')  ? $request->time_in  : ($event->time_started ?? now()->format('H:i'));
+            $attendanceData['time_out'] = $request->filled('time_out') ? $request->time_out : ($event->time_ended   ?? now()->format('H:i'));
         } else {
-            // Absent: set times to NULL
             $attendanceData['time_in']  = null;
             $attendanceData['time_out'] = null;
         }
@@ -234,10 +231,9 @@ class AttendanceController extends Controller
 
         // Auto-populate time_in and time_out based on attendance_status
         if ($request->attendance_status === 'Present') {
-            $attendanceData['time_in']  = $event->time_started ?? now()->format('H:i');
-            $attendanceData['time_out'] = $event->time_ended ?? now()->format('H:i');
+            $attendanceData['time_in']  = $request->filled('time_in')  ? $request->time_in  : ($event->time_started ?? now()->format('H:i'));
+            $attendanceData['time_out'] = $request->filled('time_out') ? $request->time_out : ($event->time_ended   ?? now()->format('H:i'));
         } else {
-            // Absent: set times to NULL
             $attendanceData['time_in']  = null;
             $attendanceData['time_out'] = null;
         }

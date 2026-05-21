@@ -80,7 +80,10 @@
                                     data-event_date="{{ $event->event_date }}"
                                     data-location="{{ $event->location }}"
                                     data-description="{{ $event->description }}"
-                                    data-status="{{ $event->status }}">
+                                    data-status="{{ $event->status }}"
+                                    data-time_started="{{ $event->time_started }}"
+                                    data-time_ended="{{ $event->time_ended }}"
+                                    >
                                     <i class="fas fa-edit"></i>
                                 </button>
                                 <button class="btn btn-sm btn-outline-danger" onclick="confirmDeleteEvent({{ $event->event_id }})">
@@ -125,7 +128,10 @@
                     data-event_date="{{ $event->event_date }}"
                     data-location="{{ $event->location }}"
                     data-description="{{ $event->description }}"
-                    data-status="{{ $event->status }}">
+                    data-status="{{ $event->status }}"
+                    data-time_started="{{ $event->time_started }}"
+                    data-time_ended="{{ $event->time_ended }}"
+                    >
                     <i class="fas fa-edit"></i>
                 </button>
                 <button class="btn btn-sm btn-outline-danger" onclick="confirmDeleteEvent({{ $event->event_id }})">
@@ -195,6 +201,16 @@
                             <label class="form-label">Date <span class="text-danger">*</span></label>
                             <input type="date" name="event_date" id="event_date" class="form-control" required>
                         </div>
+                        <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Time Started <span class="text-danger">*</span></label>
+                            <input type="time" name="time_started" id="time_started" class="form-control" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Time Ended <span class="text-danger">*</span></label>
+                            <input type="time" name="time_ended" id="time_ended" class="form-control" required>
+                        </div>
+                    </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Location <span class="text-danger">*</span></label>
@@ -242,12 +258,14 @@
             const d = btn.dataset;
             eventForm.action = `/events/${d.event_id}`;
             document.getElementById('eventFormMethod').value = 'PUT';
-            document.getElementById('event_name').value  = d.event_name;
-            document.getElementById('event_type').value  = d.event_type;
-            document.getElementById('event_date').value  = d.event_date;
-            document.getElementById('location').value    = d.location;
-            document.getElementById('description').value = d.description;
-            document.getElementById('status').value      = d.status;
+            document.getElementById('event_name').value    = d.event_name;
+            document.getElementById('event_type').value    = d.event_type;
+            document.getElementById('event_date').value    = d.event_date;
+            document.getElementById('time_started').value  = d.time_started ?? '';
+            document.getElementById('time_ended').value    = d.time_ended   ?? '';
+            document.getElementById('location').value      = d.location;
+            document.getElementById('description').value   = d.description;
+            document.getElementById('status').value        = d.status;
             document.getElementById('eventModalLabel').innerText  = "Edit Event";
             document.getElementById('eventFormSubmit').innerText  = "Update Event";
             eventModal.show();

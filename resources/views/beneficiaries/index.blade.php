@@ -86,7 +86,7 @@
                         </td>
                         <td class="text-end pe-3">
                             <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-primary"
+                                <button class="btn btn-sm btn-outline-primary btn-edit-beneficiary"
                                     data-beneficiary_id="{{ $b->beneficiary_id }}"
                                     data-first_name="{{ $b->first_name }}"
                                     data-middle_name="{{ $b->middle_name }}"
@@ -138,7 +138,7 @@
                     </small>
                 </div>
                 <div class="d-flex gap-1 flex-shrink-0">
-                    <button class="btn btn-sm btn-outline-primary"
+                    <button class="btn btn-sm btn-outline-primary btn-edit-beneficiary"
                         data-beneficiary_id="{{ $b->beneficiary_id }}"
                         data-first_name="{{ $b->first_name }}"
                         data-middle_name="{{ $b->middle_name }}"
