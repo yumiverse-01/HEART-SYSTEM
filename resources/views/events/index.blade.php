@@ -224,7 +224,12 @@
                             <label class="form-label">Event Date <span class="text-danger">*</span></label>
                             <input type="date" name="event_date" id="event_date" class="form-control" required>
                         </div>
-                        <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            {{-- empty col or add something here --}}
+                        </div>
+                    </div>
+
+                    <div class="row g-2 mb-3">
                         <div class="col-6">
                             <label class="form-label">Time Started <span class="text-danger">*</span></label>
                             <input type="time" name="time_started" id="time_started" class="form-control" required>
