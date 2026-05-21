@@ -164,9 +164,22 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    function showToast(type, message) {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+            customClass: { popup: 'colored-toast' }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
-        @if(session('success')) Swal.fire({ title: 'Success!', text: '{{ session("success") }}', icon: 'success', confirmButtonColor: '#1e3a8a' }); @endif
-        @if(session('error'))   Swal.fire({ title: 'Error!',   text: '{{ session("error") }}',   icon: 'error',   confirmButtonColor: '#d33'    }); @endif
+        @if(session('success')) showToast('success', '{{ session("success") }}'); @endif
+        @if(session('error'))   showToast('error', '{{ session("error") }}'); @endif
     });
 </script>
 @endpush

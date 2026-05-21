@@ -61,7 +61,7 @@ class BeneficiaryController extends Controller
             'age'             => 'nullable|integer',
             'sex'             => 'required|in:Male,Female,Other',
             'address'         => 'nullable|string',
-            'contact_number'  => 'nullable|regex:/^(09|\+639)\d{9}$/|max:11',
+            'contact_number'  => 'nullable|regex:/^09\d{9}$/|max:11',
             'guardian_name'   => 'nullable|string',
             'date_registered' => 'nullable|date',
         ]);
@@ -137,7 +137,7 @@ class BeneficiaryController extends Controller
             'age'             => 'nullable|integer',
             'sex'             => 'nullable|in:Male,Female,Other',
             'address'         => 'nullable|string',
-            'contact_number'  => 'nullable|regex:/^(09|\+639)\d{9}$/|max:11',
+            'contact_number'  => 'nullable|regex:/^09\d{9}$/|max:11',
             'guardian_name'   => 'nullable|string',
             'date_registered' => 'nullable|date',
         ]);
