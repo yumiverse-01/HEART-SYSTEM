@@ -242,11 +242,11 @@
                             <input type="email" name="email" id="email" class="form-control" required>
                         </div>
                         <div class="col-6 col-sm-4">
-                            <label class="form-label">Birth Date</label>
+                            <label class="form-label">Birth Date <span class="text-danger">*</span></label>
                             <input type="date" name="birth_date" id="birth_date" class="form-control" required>
                         </div>
                         <div class="col-6 col-sm-4">
-                            <label class="form-label">Age</label>
+                            <label class="form-label">Age <span class="text-danger">*</span></label>
                             <input type="number" name="age" id="age" class="form-control" required>
                         </div>
                         <div class="col-12 col-sm-4">

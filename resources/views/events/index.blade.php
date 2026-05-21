@@ -226,18 +226,6 @@
                             <input type="time" name="time_ended" id="time_ended" class="form-control" required>
                         </div>
                     </div>
-                    </div>
-
-                    <div class="row g-2 mb-3">
-                        <div class="col-6">
-                            <label class="form-label">Time Started <span class="text-danger">*</span></label>
-                            <input type="time" name="time_started" id="time_started" class="form-control" required>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Time Ended <span class="text-danger">*</span></label>
-                            <input type="time" name="time_ended" id="time_ended" class="form-control" required>
-                        </div>
-                    </div>
 
                     <div class="mb-3">
                         <label class="form-label">Location <span class="text-danger">*</span></label>
