@@ -45,7 +45,7 @@
 
 {{-- Table — stacks to cards on mobile --}}
 <div class="table-card">
-    <div class="table-responsive d-none d-md-block">
+    <div class="table-responsive d-none d-md-block" style="overflow-x: auto;">
         <table class="table table-hover align-middle mb-0">
             <thead class="bg-light">
                 <tr class="text-secondary small text-uppercase">
@@ -66,7 +66,7 @@
                                     {{ substr($b->first_name,0,1) }}{{ substr($b->last_name,0,1) }}
                                 </div>
                                 <div style="min-width:0;">
-                                    <div class="fw-bold text-primary text-truncate">
+                                    <div class="fw-bold text-primary text-truncate" style="text-transform: capitalize;">
                                         {{ $b->first_name }} {{ $b->middle_name }} {{ $b->last_name }}
                                     </div>
                                     <small class="text-muted text-truncate d-block">{{ $b->email }}</small>
@@ -74,18 +74,27 @@
                             </div>
                         </td>
                         <td>
-                            <span class="badge bg-light text-dark border">{{ $b->sex ?? 'N/A' }}</span>
+                            <span class="badge bg-light text-dark border" style="text-transform: capitalize;">{{ $b->sex ?? 'N/A' }}</span>
                             <small class="d-block text-muted mt-1">{{ $b->age ?? '?' }} yrs</small>
                         </td>
                         <td>
                             <small class="d-block"><i class="fas fa-phone text-muted me-1"></i>{{ $b->contact_number ?? '-' }}</small>
-                            <small class="text-muted">{{ $b->guardian_name ?? 'No Guardian' }}</small>
+                            <small class="text-muted" style="text-transform: capitalize;">{{ $b->guardian_name ?? 'No Guardian' }}</small>
                         </td>
                         <td>
                             <small class="fw-medium">{{ $b->date_registered ? \Carbon\Carbon::parse($b->date_registered)->format('M d, Y') : '-' }}</small>
                         </td>
                         <td class="text-end pe-3">
                             <div class="btn-group">
+                                <button class="btn btn-sm btn-outline-info btn-view-beneficiary"
+                                        data-full_name="{{ $b->first_name }} {{ $b->middle_name }} {{ $b->last_name }}"
+                                        data-email="{{ $b->email }}"
+                                        data-age="{{ $b->age ?? 'N/A' }}"
+                                        data-sex="{{ $b->sex ?? 'N/A' }}"
+                                        data-address="{{ $b->address ?? 'N/A' }}"
+                                        data-contact="{{ $b->contact_number ?? 'N/A' }}">
+                                    <i class="fas fa-eye"></i>
+                                </button>
                                 <button class="btn btn-sm btn-outline-primary btn-edit-beneficiary"
                                     data-beneficiary_id="{{ $b->beneficiary_id }}"
                                     data-first_name="{{ $b->first_name }}"
@@ -121,7 +130,7 @@
         <div class="p-3 border-bottom">
             <div class="d-flex justify-content-between align-items-start gap-2">
                 <div style="min-width:0;">
-                    <div class="fw-bold text-primary text-truncate">
+                    <div class="fw-bold text-primary text-truncate" style="text-transform: capitalize;">
                         {{ $b->first_name }} {{ $b->middle_name }} {{ $b->last_name }}
                     </div>
                     <small class="text-muted d-block text-truncate">
@@ -138,6 +147,15 @@
                     </small>
                 </div>
                 <div class="d-flex gap-1 flex-shrink-0">
+                    <button class="btn btn-sm btn-outline-info btn-view-beneficiary"
+                            data-full_name="{{ $b->first_name }} {{ $b->middle_name }} {{ $b->last_name }}"
+                            data-email="{{ $b->email }}"
+                            data-age="{{ $b->age ?? 'N/A' }}"
+                            data-sex="{{ $b->sex ?? 'N/A' }}"
+                            data-address="{{ $b->address ?? 'N/A' }}"
+                            data-contact="{{ $b->contact_number ?? 'N/A' }}">
+                        <i class="fas fa-eye"></i>
+                    </button>
                     <button class="btn btn-sm btn-outline-primary btn-edit-beneficiary"
                         data-beneficiary_id="{{ $b->beneficiary_id }}"
                         data-first_name="{{ $b->first_name }}"
@@ -209,27 +227,27 @@
                     <div class="row g-2">
                         <div class="col-12 col-sm-4">
                             <label class="form-label">First Name <span class="text-danger">*</span></label>
-                            <input type="text" name="first_name" id="first_name" class="form-control" required>
+                            <input type="text" name="first_name" id="first_name" class="form-control" style="text-transform: capitalize;" required>
                         </div>
                         <div class="col-12 col-sm-4">
                             <label class="form-label">Middle Name</label>
-                            <input type="text" name="middle_name" id="middle_name" class="form-control">
+                            <input type="text" name="middle_name" id="middle_name" class="form-control" style="text-transform: capitalize;">
                         </div>
                         <div class="col-12 col-sm-4">
                             <label class="form-label">Last Name <span class="text-danger">*</span></label>
-                            <input type="text" name="last_name" id="last_name" class="form-control" required>
+                            <input type="text" name="last_name" id="last_name" class="form-control" style="text-transform: capitalize;" required>
                         </div>
                         <div class="col-12">
                             <label class="form-label">Email <span class="text-danger">*</span></label>
                             <input type="email" name="email" id="email" class="form-control" required>
                         </div>
                         <div class="col-6 col-sm-4">
-                            <label class="form-label">Birth Date <span class="text-danger">*</span></label>
-                            <input type="date" name="birth_date" id="birth_date" class="form-control" required>
+                            <label class="form-label">Birth Date</label>
+                            <input type="date" name="birth_date" id="birth_date" class="form-control">
                         </div>
                         <div class="col-6 col-sm-4">
-                            <label class="form-label">Age <span class="text-danger">*</span></label>
-                            <input type="number" name="age" id="age" class="form-control" required>
+                            <label class="form-label">Age</label>
+                            <input type="number" name="age" id="age" class="form-control">
                         </div>
                         <div class="col-12 col-sm-4">
                             <label class="form-label">Sex <span class="text-danger">*</span></label>
@@ -242,19 +260,25 @@
                         </div>
                         <div class="col-12">
                             <label class="form-label">Address <span class="text-danger">*</span></label>
-                            <input type="text" name="address" id="address" class="form-control" required>
+                            <input type="text" name="address" id="address" class="form-control" style="text-transform: capitalize;" required>
                         </div>
                         <div class="col-12 col-sm-6">
                             <label class="form-label">Contact Number <span class="text-danger">*</span></label>
-                            <input type="text" name="contact_number" id="contact_number" class="form-control" required>
+                            <input type="tel" name="contact_number" id="contact_number" class="form-control"
+                                   placeholder="09123456789"
+                                   pattern="^09\d{9}$"
+                                   maxlength="11"
+                                   title="Format: 09XXXXXXXXX (11 digits)"
+                                   required>
+                            <small class="text-muted d-block mt-1">Format: 09XXXXXXXXX (11 digits)</small>
                         </div>
                         <div class="col-12 col-sm-6">
                             <label class="form-label">Guardian Name</label>
-                            <input type="text" name="guardian_name" id="guardian_name" class="form-control">
+                            <input type="text" name="guardian_name" id="guardian_name" class="form-control" style="text-transform: capitalize;">
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Date Registered <span class="text-danger">*</span></label>
-                            <input type="date" name="date_registered" id="date_registered" class="form-control" required>
+                            <label class="form-label">Date Registered</label>
+                            <input type="date" name="date_registered" id="date_registered" class="form-control">
                         </div>
                     </div>
                 </div>
@@ -263,6 +287,47 @@
                     <button type="submit" class="btn btn-primary px-4" id="beneficiaryFormSubmit">Save Beneficiary</button>
                 </div>
             </form>
+        </div>
+    </div>
+</div>
+
+{{-- View Beneficiary Modal --}}
+<div class="modal fade" id="viewBeneficiaryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" style="color:#1e3a8a;">
+                    <i class="fas fa-user-circle me-2"></i>Beneficiary Details
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="text-muted small d-block">Full Name</label>
+                        <div id="view_name" class="fw-bold fs-5" style="text-transform: capitalize;"></div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label class="text-muted small d-block">Email</label>
+                        <div id="view_email" class="text-dark"></div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label class="text-muted small d-block">Contact</label>
+                        <div id="view_contact"></div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label class="text-muted small d-block">Age / Sex</label>
+                        <div id="view_age_sex" style="text-transform: capitalize;"></div>
+                    </div>
+                    <div class="col-12">
+                        <label class="text-muted small d-block border-bottom pb-1 mb-2">Full Address</label>
+                        <div id="view_address" class="small" style="text-transform: capitalize;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
         </div>
     </div>
 </div>
@@ -279,6 +344,7 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     const bModal = new bootstrap.Modal(document.getElementById('beneficiaryModal'));
+    const viewModal = new bootstrap.Modal(document.getElementById('viewBeneficiaryModal'));
     const bForm  = document.getElementById('beneficiaryForm');
 
     document.getElementById('btnOpenCreateBeneficiary')?.addEventListener('click', () => {
@@ -306,6 +372,18 @@
         });
     });
 
+    document.querySelectorAll('.btn-view-beneficiary').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const d = this.dataset;
+            document.getElementById('view_name').textContent    = d.full_name;
+            document.getElementById('view_email').textContent   = d.email;
+            document.getElementById('view_contact').textContent = d.contact;
+            document.getElementById('view_age_sex').textContent = `${d.age} / ${d.sex}`;
+            document.getElementById('view_address').textContent = d.address;
+            viewModal.show();
+        });
+    });
+
     function confirmDeleteBeneficiary(id) {
         Swal.fire({
             title: 'Delete Beneficiary?',
@@ -316,15 +394,28 @@
         }).then(r => { if (r.isConfirmed) document.getElementById('delete-form-' + id).submit(); });
     }
 
+    function showToast(type, message) {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+            customClass: { popup: 'colored-toast' }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         @if(session('success'))
-            Swal.fire({ title:'Success!', text:'{{ session("success") }}', icon:'success', confirmButtonColor:'#1e3a8a' });
+            showToast('success', '{{ session("success") }}');
         @endif
         @if(session('error'))
-            Swal.fire({ title:'Error!', text:'{{ session("error") }}', icon:'error', confirmButtonColor:'#d33' });
+            showToast('error', '{{ session("error") }}');
         @endif
         @if($errors->any())
-            Swal.fire({ title:'Validation Error!', html:@json($errors->all()).join('<br>'), icon:'error', confirmButtonColor:'#d33' });
+            showToast('error', @json($errors->all()).join(' '));
         @endif
     });
 </script>

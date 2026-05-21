@@ -238,18 +238,32 @@
         serviceModal.show();
     }
 
+    function showToast(type, message) {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+            customClass: { popup: 'colored-toast' }
+        });
+    }
+
     function confirmDelete(id) {
         Swal.fire({
             title:'Delete Record?', text:"This action cannot be undone.",
             icon:'warning', showCancelButton:true,
-            confirmButtonColor:'#d33', confirmButtonText:'Yes, delete it!'
+            confirmButtonColor:'#d33', confirmButtonText:'Yes, delete it!',
+            cancelButtonColor: '#6c757d'
         }).then(r => { if (r.isConfirmed) document.getElementById('delete-form-'+id).submit(); });
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        @if(session('success')) Swal.fire({ title:'Success!', text:'{{ session("success") }}', icon:'success', confirmButtonColor:'#1e3a8a' }); @endif
-        @if(session('error'))   Swal.fire({ title:'Error!',   text:'{{ session("error") }}',   icon:'error',   confirmButtonColor:'#d33'    }); @endif
-        @if($errors->any())     Swal.fire({ title:'Validation Error!', html:@json($errors->all()).join('<br>'), icon:'error', confirmButtonColor:'#d33' }); @endif
+        @if(session('success')) showToast('success', '{{ session("success") }}'); @endif
+        @if(session('error'))   showToast('error', '{{ session("error") }}'); @endif
+        @if($errors->any())     showToast('error', @json($errors->all()).join(' ')); @endif
     });
 </script>
 @endpush

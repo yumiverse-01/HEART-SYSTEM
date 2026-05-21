@@ -30,7 +30,7 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('events', EventController::class);
     Route::resource('attendance', AttendanceController::class);
     Route::resource('service-records', EventServiceRecordController::class);
-    Route::post('/attendance/mark', [AttendanceController::class, 'markAttendance'])->name('attendance.mark');
+    Route::post('attendance/mark', [AttendanceController::class, 'markAttendance'])->name('attendance.markAttendance');
 
     // Admin-only modules
     Route::resource('staff-activities', StaffActivitiesController::class);

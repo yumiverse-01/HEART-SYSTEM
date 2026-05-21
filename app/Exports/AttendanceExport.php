@@ -25,7 +25,7 @@ class AttendanceExport implements FromQuery, WithHeadings, WithMapping
 
     public function headings(): array
     {
-        return ['ID', 'Beneficiary', 'Event', 'Status', 'Time In', 'Time Out'];
+        return ['No.', 'Beneficiary', 'Event Name', 'Event Date', 'Status', 'Time In', 'Time Out'];
     }
 
     public function map($row): array
@@ -34,6 +34,7 @@ class AttendanceExport implements FromQuery, WithHeadings, WithMapping
             $row->attendance_id,
             $row->beneficiary->first_name . ' ' . $row->beneficiary->last_name,
             $row->event->event_name,
+            $row->event->event_date ? \Carbon\Carbon::parse($row->event->event_date)->format('M d, Y') : null,
             $row->attendance_status,
             $row->time_in,
             $row->time_out,

@@ -44,12 +44,12 @@
 
 {{-- Desktop table --}}
 <div class="table-card d-none d-md-block">
-    <div class="table-responsive">
+    <div class="table-responsive" style="overflow-x: auto;">
         <table class="table table-hover align-middle mb-0">
             <thead class="bg-light">
                 <tr class="text-secondary small text-uppercase">
                     <th class="ps-3">Event Details</th>
-                    <th>Type</th>
+                    <th>Time Window</th>
                     <th>Location</th>
                     <th>Status</th>
                     <th class="text-end pe-3">Actions</th>
@@ -59,14 +59,23 @@
                 @forelse($events as $event)
                     <tr>
                         <td class="ps-3">
-                            <div class="fw-bold text-primary">{{ $event->event_name }}</div>
+                            <div class="fw-bold text-primary" style="text-transform: capitalize;">{{ $event->event_name }}</div>
                             <small class="text-muted">
                                 <i class="far fa-calendar-alt me-1"></i>
                                 {{ $event->event_date ? \Carbon\Carbon::parse($event->event_date)->format('M d, Y') : '-' }}
                             </small>
                         </td>
-                        <td><span class="badge bg-light text-dark border px-2">{{ $event->event_type ?? 'General' }}</span></td>
-                        <td><small>{{ $event->location ?? '-' }}</small></td>
+                        <td>
+                            <small class="d-block">
+                                <i class="fas fa-clock me-1"></i>
+                                {{ $event->time_started ? \Carbon\Carbon::parse($event->time_started)->format('h:i A') : '-' }}
+                                <strong>to</strong>
+                                {{ $event->time_ended ? \Carbon\Carbon::parse($event->time_ended)->format('h:i A') : '-' }}
+                            </small>
+                        </td>
+                        <td>
+                            <small style="text-transform: capitalize;">{{ $event->location ?? '-' }}</small>
+                        </td>
                         <td>
                             @php $bc = match($event->status) { 'Upcoming'=>'bg-warning text-dark','Completed'=>'bg-success text-white','Cancelled'=>'bg-danger text-white',default=>'bg-secondary text-white' }; @endphp
                             <span class="badge {{ $bc }}">{{ $event->status }}</span>
@@ -78,6 +87,8 @@
                                     data-event_name="{{ $event->event_name }}"
                                     data-event_type="{{ $event->event_type }}"
                                     data-event_date="{{ $event->event_date }}"
+                                    data-time_started="{{ $event->time_started }}"
+                                    data-time_ended="{{ $event->time_ended }}"
                                     data-location="{{ $event->location }}"
                                     data-description="{{ $event->description }}"
                                     data-status="{{ $event->status }}"
@@ -106,10 +117,16 @@
     <div class="table-card mb-2 p-3">
         <div class="d-flex justify-content-between align-items-start gap-2">
             <div style="min-width:0;">
-                <div class="fw-bold text-primary text-truncate">{{ $event->event_name }}</div>
+                <div class="fw-bold text-primary text-truncate" style="text-transform: capitalize;">{{ $event->event_name }}</div>
                 <small class="text-muted d-block">
                     <i class="far fa-calendar-alt me-1"></i>
                     {{ $event->event_date ? \Carbon\Carbon::parse($event->event_date)->format('M d, Y') : '-' }}
+                </small>
+                <small class="text-muted d-block">
+                    <i class="fas fa-clock me-1"></i>
+                    {{ $event->time_started ? \Carbon\Carbon::parse($event->time_started)->format('h:i A') : '-' }}
+                    to
+                    {{ $event->time_ended ? \Carbon\Carbon::parse($event->time_ended)->format('h:i A') : '-' }}
                 </small>
                 <small class="text-muted d-block text-truncate">
                     <i class="fas fa-map-marker-alt me-1"></i>{{ $event->location ?? '-' }}
@@ -117,7 +134,6 @@
                 <div class="mt-1">
                     @php $bc = match($event->status) { 'Upcoming'=>'bg-warning text-dark','Completed'=>'bg-success text-white','Cancelled'=>'bg-danger text-white',default=>'bg-secondary text-white' }; @endphp
                     <span class="badge {{ $bc }} me-1">{{ $event->status }}</span>
-                    <span class="badge bg-light text-dark border">{{ $event->event_type ?? 'General' }}</span>
                 </div>
             </div>
             <div class="d-flex gap-1 flex-shrink-0">
@@ -126,6 +142,8 @@
                     data-event_name="{{ $event->event_name }}"
                     data-event_type="{{ $event->event_type }}"
                     data-event_date="{{ $event->event_date }}"
+                    data-time_started="{{ $event->time_started }}"
+                    data-time_ended="{{ $event->time_ended }}"
                     data-location="{{ $event->location }}"
                     data-description="{{ $event->description }}"
                     data-status="{{ $event->status }}"
@@ -178,7 +196,7 @@
 
 {{-- Modal --}}
 <div class="modal fade" id="eventModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title fw-bold" id="eventModalLabel">Create Event</h5>
@@ -190,15 +208,12 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Event Name <span class="text-danger">*</span></label>
-                        <input type="text" name="event_name" id="event_name" class="form-control" required>
+                        <input type="text" name="event_name" id="event_name" class="form-control" placeholder="Enter event name" style="text-transform: capitalize;" required>
                     </div>
+
                     <div class="row g-2 mb-3">
                         <div class="col-6">
-                            <label class="form-label">Type</label>
-                            <input type="text" name="event_type" id="event_type" class="form-control">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Date <span class="text-danger">*</span></label>
+                            <label class="form-label">Event Date <span class="text-danger">*</span></label>
                             <input type="date" name="event_date" id="event_date" class="form-control" required>
                         </div>
                         <div class="row g-2 mb-3">
@@ -212,17 +227,32 @@
                         </div>
                     </div>
                     </div>
+
+                    <div class="row g-2 mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Time Started <span class="text-danger">*</span></label>
+                            <input type="time" name="time_started" id="time_started" class="form-control" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Time Ended <span class="text-danger">*</span></label>
+                            <input type="time" name="time_ended" id="time_ended" class="form-control" required>
+                        </div>
+                    </div>
+
                     <div class="mb-3">
                         <label class="form-label">Location <span class="text-danger">*</span></label>
-                        <input type="text" name="location" id="location" class="form-control" required>
+                        <input type="text" name="location" id="location" class="form-control" placeholder="Enter location" style="text-transform: capitalize;" required>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">Description</label>
-                        <textarea name="description" id="description" class="form-control" rows="3"></textarea>
+                        <textarea name="description" id="description" class="form-control" rows="3" style="text-transform: capitalize;"></textarea>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">Status <span class="text-danger">*</span></label>
-                        <select name="status" id="status" class="form-select">
+                        <select name="status" id="status" class="form-select" required>
+                            <option value="">Select Status</option>
                             <option value="Upcoming">Upcoming</option>
                             <option value="Completed">Completed</option>
                             <option value="Cancelled">Cancelled</option>
@@ -272,18 +302,48 @@
         });
     });
 
+    // Validate time_ended > time_started
+    document.getElementById('eventForm').addEventListener('submit', function(e) {
+        const timeStarted = document.getElementById('time_started').value;
+        const timeEnded = document.getElementById('time_ended').value;
+        
+        if (timeStarted && timeEnded && timeEnded <= timeStarted) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Invalid Time!',
+                text: 'Time Ended must be after Time Started',
+                icon: 'error',
+                confirmButtonColor: '#d33'
+            });
+        }
+    });
+
+    function showToast(type, message) {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+            customClass: { popup: 'colored-toast' }
+        });
+    }
+
     function confirmDeleteEvent(id) {
         Swal.fire({
             title:'Delete Event?', text:"This will remove the event and its records!",
             icon:'warning', showCancelButton:true,
-            confirmButtonColor:'#d33', confirmButtonText:'Yes, delete!'
+            confirmButtonColor:'#d33', confirmButtonText:'Yes, delete!',
+            cancelButtonColor: '#6c757d'
         }).then(r => { if (r.isConfirmed) document.getElementById('delete-form-'+id).submit(); });
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        @if(session('success')) Swal.fire({ title:'Success!', text:'{{ session("success") }}', icon:'success', confirmButtonColor:'#1e3a8a' }); @endif
-        @if(session('error'))   Swal.fire({ title:'Error!',   text:'{{ session("error") }}',   icon:'error',   confirmButtonColor:'#d33'    }); @endif
-        @if($errors->any())     Swal.fire({ title:'Validation Error!', html:@json($errors->all()).join('<br>'), icon:'error', confirmButtonColor:'#d33' }); @endif
+        @if(session('success')) showToast('success', '{{ session("success") }}'); @endif
+        @if(session('error'))   showToast('error', '{{ session("error") }}'); @endif
+        @if($errors->any())     showToast('error', @json($errors->all()).join(' ')); @endif
     });
 </script>
 @endpush

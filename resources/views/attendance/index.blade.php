@@ -22,7 +22,9 @@
                         <option value="">-- Choose an Event to Start Marking --</option>
                         @foreach($events as $event)
                             <option value="{{ $event->event_id }}" @if(request('event_id') == $event->event_id) selected @endif>
-                                {{ $event->event_name }} ({{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }})
+                                {{ $event->event_name }} ({{ \Carbon\Carbon::parse($event->event_date)->format('M d, Y') }}) - 
+                                {{ $event->time_started ? \Carbon\Carbon::parse($event->time_started)->format('h:i A') : '--:--' }} to 
+                                {{ $event->time_ended ? \Carbon\Carbon::parse($event->time_ended)->format('h:i A') : '--:--' }}
                             </option>
                         @endforeach
                     </select>
@@ -90,13 +92,13 @@
 
 {{-- Desktop Table --}}
 <div class="table-card d-none d-md-block">
-    <div class="table-responsive">
+    <div class="table-responsive" style="overflow-x: auto;">
         <table class="table table-hover align-middle mb-0">
             <thead class="bg-light">
                 <tr class="text-secondary small text-uppercase">
                     <th class="ps-3">Beneficiary</th>
-                    <th>Time In</th>
-                    <th>Time Out</th>
+                    <th>Contact</th>
+                    <th>Age / Sex</th>
                     <th>Status</th>
                     <th class="text-end pe-3">Actions</th>
                 </tr>
@@ -106,50 +108,53 @@
                     @php $attendance = $attendances->where('beneficiary_id', $b->beneficiary_id)->first(); @endphp
                     <tr>
                         <td class="ps-3">
-                            <div class="fw-bold text-primary">{{ $b->first_name }} {{ $b->last_name }}</div>
+                            <div class="fw-bold text-primary" style="text-transform: capitalize;">{{ $b->first_name }} {{ $b->last_name }}</div>
                             <small class="text-muted"><i class="far fa-envelope me-1"></i>{{ $b->email }}</small>
                         </td>
-                        <td class="small">
-                            {{ $attendance && $attendance->time_in  ? \Carbon\Carbon::parse($attendance->time_in)->format('h:i A')  : '—' }}
+                        <td>
+                            <small>{{ $b->contact_number ?? '—' }}</small>
                         </td>
-                        <td class="small">
-                            {{ $attendance && $attendance->time_out ? \Carbon\Carbon::parse($attendance->time_out)->format('h:i A') : '—' }}
+                        <td class="small" style="text-transform: capitalize;">
+                            {{ $b->age ?? '—' }} / {{ $b->sex ?? '—' }}
                         </td>
                         <td>
-                            @php
-                                $statusClass = $attendance
-                                    ? ($attendance->attendance_status == 'Present' ? 'bg-success' : 'bg-danger')
-                                    : 'bg-secondary';
-                            @endphp
-                            <span class="badge {{ $statusClass }} btn-mark-attendance px-3 py-2"
-                                  style="cursor:pointer; font-weight:500;"
-                                  data-beneficiary_id="{{ $b->beneficiary_id }}"
-                                  data-name="{{ $b->first_name }} {{ $b->last_name }}"
-                                  data-status="{{ optional($attendance)->attendance_status }}"
-                                  data-time_in="{{ optional($attendance)->time_in }}"
-                                  data-time_out="{{ optional($attendance)->time_out }}">
-                                {{ $attendance ? $attendance->attendance_status : 'Not Marked' }}
-                            </span>
+                            @if($attendance)
+                                @if($attendance->attendance_status === 'Present')
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-check-circle me-1"></i>Present
+                                    </span>
+                                @else
+                                    <span class="badge bg-danger">
+                                        <i class="fas fa-times-circle me-1"></i>Absent
+                                    </span>
+                                @endif
+                            @else
+                                <span class="badge bg-secondary">Not Marked</span>
+                            @endif
                         </td>
                         <td class="text-end pe-3">
-                            <div class="btn-group">
-                                <button class="btn btn-sm btn-outline-info btn-view-beneficiary"
-                                        data-full_name="{{ $b->first_name }} {{ $b->middle_name }} {{ $b->last_name }}"
-                                        data-email="{{ $b->email }}"
-                                        data-age="{{ $b->age ?? 'N/A' }}"
-                                        data-sex="{{ $b->sex ?? 'N/A' }}"
-                                        data-address="{{ $b->address ?? 'N/A' }}"
-                                        data-contact="{{ $b->contact_number ?? 'N/A' }}">
-                                    <i class="fas fa-eye"></i>
-                                </button>
-                                <button class="btn btn-sm btn-outline-primary btn-mark-attendance"
-                                        data-beneficiary_id="{{ $b->beneficiary_id }}"
-                                        data-name="{{ $b->first_name }} {{ $b->last_name }}"
-                                        data-status="{{ optional($attendance)->attendance_status }}"
-                                        data-time_in="{{ optional($attendance)->time_in }}"
-                                        data-time_out="{{ optional($attendance)->time_out }}">
-                                    <i class="fas fa-edit"></i>
-                                </button>
+                            <div class="btn-group btn-group-sm gap-1">
+                                <!-- PRESENT BUTTON -->
+                                <form action="{{ route('attendance.markAttendance') }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <input type="hidden" name="beneficiary_id" value="{{ $b->beneficiary_id }}">
+                                    <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                                    <input type="hidden" name="attendance_status" value="Present">
+                                    <button type="submit" class="btn btn-sm {{ $attendance && $attendance->attendance_status === 'Present' ? 'btn-success' : 'btn-outline-success' }}" title="Mark as Present">
+                                        Present
+                                    </button>
+                                </form>
+
+                                <!-- ABSENT BUTTON -->
+                                <form action="{{ route('attendance.markAttendance') }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <input type="hidden" name="beneficiary_id" value="{{ $b->beneficiary_id }}">
+                                    <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                                    <input type="hidden" name="attendance_status" value="Absent">
+                                    <button type="submit" class="btn btn-sm {{ $attendance && $attendance->attendance_status === 'Absent' ? 'btn-danger' : 'btn-outline-danger' }}" title="Mark as Absent">
+                                        Absent
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -168,58 +173,58 @@
     @forelse($beneficiaries as $b)
         @php
             $attendance   = $attendances->where('beneficiary_id', $b->beneficiary_id)->first();
-            $statusClass  = $attendance
-                ? ($attendance->attendance_status == 'Present' ? 'bg-success' : 'bg-danger')
-                : 'bg-secondary';
-            $statusLabel  = $attendance ? $attendance->attendance_status : 'Not Marked';
         @endphp
         <div class="table-card mb-2 p-3">
-            <div class="d-flex justify-content-between align-items-start gap-2">
-                <div style="min-width:0;">
-                    <div class="fw-bold text-primary text-truncate">{{ $b->first_name }} {{ $b->last_name }}</div>
-                    <small class="text-muted d-block text-truncate">
-                        <i class="far fa-envelope me-1"></i>{{ $b->email }}
-                    </small>
-                    <div class="d-flex align-items-center gap-2 mt-2 flex-wrap">
-                        <span class="badge {{ $statusClass }} btn-mark-attendance px-3 py-2"
-                              style="cursor:pointer; font-weight:500;"
-                              data-beneficiary_id="{{ $b->beneficiary_id }}"
-                              data-name="{{ $b->first_name }} {{ $b->last_name }}"
-                              data-status="{{ optional($attendance)->attendance_status }}"
-                              data-time_in="{{ optional($attendance)->time_in }}"
-                              data-time_out="{{ optional($attendance)->time_out }}">
-                            {{ $statusLabel }}
-                        </span>
-                        @if($attendance && $attendance->time_in)
-                            <small class="text-muted">
-                                <i class="far fa-clock me-1"></i>
-                                In: {{ \Carbon\Carbon::parse($attendance->time_in)->format('h:i A') }}
-                                @if($attendance->time_out)
-                                    · Out: {{ \Carbon\Carbon::parse($attendance->time_out)->format('h:i A') }}
-                                @endif
-                            </small>
+            <div style="min-width:0;">
+                <div class="fw-bold text-primary text-truncate" style="text-transform: capitalize;">{{ $b->first_name }} {{ $b->last_name }}</div>
+                <small class="text-muted d-block text-truncate">
+                    <i class="far fa-envelope me-1"></i>{{ $b->email }}
+                </small>
+                <small class="text-muted d-block">
+                    <i class="fas fa-phone me-1"></i>{{ $b->contact_number ?? '-' }} · {{ $b->age ?? '-' }} / {{ $b->sex ?? '-' }}
+                </small>
+                
+                <div class="d-flex align-items-center gap-2 mt-2 flex-wrap">
+                    @if($attendance)
+                        @if($attendance->attendance_status === 'Present')
+                            <span class="badge bg-success">
+                                <i class="fas fa-check-circle me-1"></i>Present
+                            </span>
+                        @else
+                            <span class="badge bg-danger">
+                                <i class="fas fa-times-circle me-1"></i>Absent
+                            </span>
                         @endif
-                    </div>
+                    @else
+                        <span class="badge bg-secondary">Not Marked</span>
+                    @endif
                 </div>
-                <div class="d-flex gap-1 flex-shrink-0">
-                    <button class="btn btn-sm btn-outline-info btn-view-beneficiary"
-                            data-full_name="{{ $b->first_name }} {{ $b->middle_name }} {{ $b->last_name }}"
-                            data-email="{{ $b->email }}"
-                            data-age="{{ $b->age ?? 'N/A' }}"
-                            data-sex="{{ $b->sex ?? 'N/A' }}"
-                            data-address="{{ $b->address ?? 'N/A' }}"
-                            data-contact="{{ $b->contact_number ?? 'N/A' }}">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                    <button class="btn btn-sm btn-outline-primary btn-mark-attendance"
-                            data-beneficiary_id="{{ $b->beneficiary_id }}"
-                            data-name="{{ $b->first_name }} {{ $b->last_name }}"
-                            data-status="{{ optional($attendance)->attendance_status }}"
-                            data-time_in="{{ optional($attendance)->time_in }}"
-                            data-time_out="{{ optional($attendance)->time_out }}">
-                        <i class="fas fa-edit"></i>
-                    </button>
+
+                <!-- Action Buttons -->
+                <div class="d-flex gap-2 mt-3">
+                    <!-- PRESENT -->
+                    <form action="{{ route('attendance.markAttendance') }}" method="POST" class="flex-fill">
+                        @csrf
+                        <input type="hidden" name="beneficiary_id" value="{{ $b->beneficiary_id }}">
+                        <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                        <input type="hidden" name="attendance_status" value="Present">
+                        <button type="submit" class="btn btn-sm w-100 {{ $attendance && $attendance->attendance_status === 'Present' ? 'btn-success' : 'btn-outline-success' }}">
+                            Present
+                        </button>
+                    </form>
+
+                    <!-- ABSENT -->
+                    <form action="{{ route('attendance.markAttendance') }}" method="POST" class="flex-fill">
+                        @csrf
+                        <input type="hidden" name="beneficiary_id" value="{{ $b->beneficiary_id }}">
+                        <input type="hidden" name="event_id" value="{{ request('event_id') }}">
+                        <input type="hidden" name="attendance_status" value="Absent">
+                        <button type="submit" class="btn btn-sm w-100 {{ $attendance && $attendance->attendance_status === 'Absent' ? 'btn-danger' : 'btn-outline-danger' }}">
+                            Absent
+                        </button>
+                    </form>
                 </div>
+
             </div>
         </div>
     @empty
@@ -252,144 +257,26 @@
 
 @endif {{-- end @if(request('event_id')) --}}
 
-{{-- Mark Attendance Modal --}}
-<div class="modal fade" id="attendanceModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold" style="color:#1e3a8a;">Mark Attendance</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <form id="attendanceForm" method="POST" action="{{ route('attendance.mark') }}">
-                @csrf
-                <input type="hidden" name="beneficiary_id" id="modal_beneficiary_id">
-                <input type="hidden" name="event_id" value="{{ request('event_id') }}">
-                <div class="modal-body">
-                    <div class="row g-3">
-                        <div class="col-12">
-                            <label class="form-label">Beneficiary</label>
-                            <input type="text" id="display_name" class="form-control bg-light" readonly>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label">Status <span class="text-danger">*</span></label>
-                            <select name="attendance_status" id="modal_status" class="form-select" required>
-                                <option value="">-- Select Status --</option>
-                                <option value="Present">Present</option>
-                                <option value="Absent">Absent</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Time In</label>
-                            <input type="time" name="time_in" id="modal_time_in" class="form-control">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Time Out</label>
-                            <input type="time" name="time_out" id="modal_time_out" class="form-control">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary px-4">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-{{-- View Beneficiary Modal --}}
-<div class="modal fade" id="viewBeneficiaryModal" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title fw-bold" style="color:#1e3a8a;">
-                    <i class="fas fa-user-circle me-2"></i>Beneficiary Details
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row g-3">
-                    <div class="col-12 col-md-6">
-                        <label class="text-muted small d-block">Full Name</label>
-                        <div id="view_name" class="fw-bold fs-5"></div>
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <label class="text-muted small d-block">Email</label>
-                        <div id="view_email" class="text-dark"></div>
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <label class="text-muted small d-block">Contact</label>
-                        <div id="view_contact"></div>
-                    </div>
-                    <div class="col-6 col-md-4">
-                        <label class="text-muted small d-block">Age / Sex</label>
-                        <div id="view_age_sex"></div>
-                    </div>
-                    <div class="col-12">
-                        <label class="text-muted small d-block border-bottom pb-1 mb-2">Full Address</label>
-                        <div id="view_address" class="small"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    const attendanceModal      = new bootstrap.Modal(document.getElementById('attendanceModal'));
-    const viewBeneficiaryModal = new bootstrap.Modal(document.getElementById('viewBeneficiaryModal'));
-
-    // View beneficiary
-    document.querySelectorAll('.btn-view-beneficiary').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const d = this.dataset;
-            document.getElementById('view_name').textContent    = d.full_name;
-            document.getElementById('view_email').textContent   = d.email;
-            document.getElementById('view_contact').textContent = d.contact;
-            document.getElementById('view_age_sex').textContent = `${d.age} / ${d.sex}`;
-            document.getElementById('view_address').textContent = d.address;
-            viewBeneficiaryModal.show();
+    function showToast(type, message) {
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            icon: type,
+            title: message,
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+            customClass: { popup: 'colored-toast' }
         });
-    });
+    }
 
-    // Mark attendance
-    document.querySelectorAll('.btn-mark-attendance').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const d = this.dataset;
-            const showForm = () => {
-                document.getElementById('modal_beneficiary_id').value = d.beneficiary_id;
-                document.getElementById('display_name').value         = d.name;
-                document.getElementById('modal_status').value         = d.status || '';
-                document.getElementById('modal_time_in').value        = d.time_in  ? d.time_in.substring(0, 5)  : '';
-                document.getElementById('modal_time_out').value       = d.time_out ? d.time_out.substring(0, 5) : '';
-                attendanceModal.show();
-            };
-
-            if (d.status === 'Present' || d.status === 'Absent') {
-                Swal.fire({
-                    title: 'Update Record?',
-                    text: `Already marked as "${d.status}". Update it?`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#1e3a8a',
-                    confirmButtonText: 'Yes, update it!'
-                }).then(r => { if (r.isConfirmed) showForm(); });
-            } else {
-                showForm();
-            }
-        });
-    });
-
-    // Session flash messages
     document.addEventListener('DOMContentLoaded', function () {
-        @if(session('success')) Swal.fire({ title: 'Success!', text: '{{ session("success") }}', icon: 'success', confirmButtonColor: '#1e3a8a' }); @endif
-        @if(session('error'))   Swal.fire({ title: 'Error!',   text: '{{ session("error") }}',   icon: 'error',   confirmButtonColor: '#d33'    }); @endif
-        @if($errors->any())     Swal.fire({ title: 'Validation Error!', html: @json($errors->all()).join('<br>'), icon: 'error', confirmButtonColor: '#d33' }); @endif
+        @if(session('success')) showToast('success', '{{ session("success") }}'); @endif
+        @if(session('error'))   showToast('error', '{{ session("error") }}'); @endif
+        @if($errors->any())     showToast('error', @json($errors->all()).join(' ')); @endif
     });
 </script>
 @endpush
