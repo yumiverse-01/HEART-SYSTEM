@@ -60,6 +60,7 @@
                     <tr>
                         <td class="ps-3">
                             <div class="fw-bold text-primary" style="text-transform: capitalize;">{{ $event->event_name }}</div>
+                            <small class="text-muted d-block" style="text-transform: capitalize;">{{ $event->event_type ?? '-' }}</small>
                             <small class="text-muted">
                                 <i class="far fa-calendar-alt me-1"></i>
                                 {{ $event->event_date ? \Carbon\Carbon::parse($event->event_date)->format('M d, Y') : '-' }}
@@ -118,6 +119,9 @@
         <div class="d-flex justify-content-between align-items-start gap-2">
             <div style="min-width:0;">
                 <div class="fw-bold text-primary text-truncate" style="text-transform: capitalize;">{{ $event->event_name }}</div>
+                <small class="text-muted d-block" style="text-transform: capitalize;">
+                    <i class="fas fa-tag me-1"></i>{{ $event->event_type ?? '-' }}
+                </small>
                 <small class="text-muted d-block">
                     <i class="far fa-calendar-alt me-1"></i>
                     {{ $event->event_date ? \Carbon\Carbon::parse($event->event_date)->format('M d, Y') : '-' }}
@@ -209,6 +213,10 @@
                     <div class="mb-3">
                         <label class="form-label">Event Name <span class="text-danger">*</span></label>
                         <input type="text" name="event_name" id="event_name" class="form-control" placeholder="Enter event name" style="text-transform: capitalize;" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Event Type <span class="text-danger">*</span></label>
+                        <input type="text" name="event_type" id="event_type" class="form-control" placeholder="Enter event type" style="text-transform: capitalize;" required>
                     </div>
 
                     <div class="row g-2 mb-3">
