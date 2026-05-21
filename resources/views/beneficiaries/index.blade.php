@@ -243,11 +243,11 @@
                         </div>
                         <div class="col-6 col-sm-4">
                             <label class="form-label">Birth Date</label>
-                            <input type="date" name="birth_date" id="birth_date" class="form-control">
+                            <input type="date" name="birth_date" id="birth_date" class="form-control" required>
                         </div>
                         <div class="col-6 col-sm-4">
                             <label class="form-label">Age</label>
-                            <input type="number" name="age" id="age" class="form-control">
+                            <input type="number" name="age" id="age" class="form-control" required>
                         </div>
                         <div class="col-12 col-sm-4">
                             <label class="form-label">Sex <span class="text-danger">*</span></label>
